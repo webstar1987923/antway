@@ -1,0 +1,35 @@
+<nz-layout class="inner-layout">
+	<nz-sider nzWidth="200px" nzTheme="light">
+		<ul nz-menu nzMode="inline" class="sider-menu">
+			<li
+				*ngFor="let contentType of contentTypes; let i = index"
+				nz-menu-item
+				(click)="openHandler(contentType)"
+				[nzSelected]="!i"
+			>
+				{{ contentType.label }}
+			</li>
+		</ul>
+	</nz-sider>
+	<nz-content class="bg-white px-md" style="overflow-x: auto;">
+		<nz-tabset
+			*ngIf="showEditor"
+			[nzTabBarStyle]="{ 'margin-bottom': '0' }"
+		>
+			<nz-tab
+				*ngFor="let tab of descriptionTabs; let i = index"
+				[nzTitle]="tab"
+				[nzForceRender]="true"
+			>
+				<app-wang-editor
+					[(content)]="descriptions[i]"
+				></app-wang-editor>
+			</nz-tab>
+		</nz-tabset>
+	</nz-content>
+</nz-layout>
+<div class="modal-footer mb-0 px-lg">
+	<button nz-button type="submit" [nzType]="'primary'" (click)="save()">
+		保 存
+	</button>
+</div>

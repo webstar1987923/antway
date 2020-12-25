@@ -1,0 +1,29 @@
+<div class="m-md">
+	<a
+		*ngIf="record?.id"
+		[routerLink]="'/article'"
+		[queryParams]="{ writer: record.id }"
+	>
+		查看所有投稿
+	</a>
+</div>
+<sf #sf [schema]="schema" compact button="none">
+	<ng-template sf-template="status" let-me let-ui="ui" let-schema="schema">
+		<nz-tag [nzColor]="writerStatus[record?.status_writer || 0].color">
+			{{ writerStatus[record?.status_writer || 0].label }}
+		</nz-tag>
+	</ng-template>
+</sf>
+
+<div class="modal-footer mb-0 px-lg">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save(sf.value)"
+		[disabled]="!sf.valid"
+	>
+		确 定
+	</button>
+</div>

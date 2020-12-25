@@ -1,0 +1,99 @@
+<div nz-row nzGutter="24" class="pt-lg">
+	<div nz-col nzSpan="6">
+		<nz-card [nzBordered]="false" [nzTitle]="roleListHeader">
+			<ng-template #roleListHeader>
+				<div class="text-center">
+					<button
+						nz-button
+						(click)="openExpoTypeModal()"
+						[nzType]="'primary'"
+						class="accent"
+					>
+						<i nz-icon nzType="plus"></i>
+						<span>新增展会名称</span>
+					</button>
+				</div>
+			</ng-template>
+			<div
+				*ngFor="let item of expoTypes"
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				[class.bg-primary-light]="item.isActive"
+				[class.bg-primary]="item.id == selectedExpoType.id"
+				[class.text-white]="
+					item.isActive || item.id == selectedExpoType.id
+				"
+				class="p-sm point"
+				(click)="selectExpoType(item)"
+				(mouseenter)="item.isActive = true"
+				(mouseleave)="item.isActive = false"
+			>
+				<div *ngIf="item.id; else allExpoes" nz-col>
+					<div>
+						<strong>{{ item.name.zh }}</strong>
+					</div>
+					<div>
+						<strong>{{ item.name.en }}</strong>
+					</div>
+				</div>
+				<ng-template #allExpoes>
+					<div>
+						<strong>{{ item.title }}</strong>
+					</div>
+				</ng-template>
+				<div *ngIf="item.isActive && item.id" nz-row>
+					<i
+						nz-icon
+						nzType="edit"
+						class="pr-sm"
+						(click)="
+							$event.stopPropagation(); openExpoTypeModal(item)
+						"
+					></i>
+					<i
+						nz-icon
+						nzType="delete"
+						(click)="$event.stopPropagation(); deleteExpoType(item)"
+					></i>
+				</div>
+			</div>
+		</nz-card>
+	</div>
+
+	<div *ngIf="selectedExpoType" nz-col nzSpan="18">
+		<nz-card [nzBordered]="false">
+			<div
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				class="mb-md"
+			>
+				<div></div>
+				<button
+					nz-button
+					(click)="openExpoModal()"
+					[nzType]="'primary'"
+				>
+					<span>添加举办展会</span>
+				</button>
+			</div>
+			<st
+				#st
+				[columns]="columns"
+				[data]="expoes"
+				[page]="{ showSize: true, showQuickJumper: true }"
+				(change)="stChange($event)"
+			>
+				<ng-template st-row="status" let-i>
+					<nz-badge
+						[nzColor]="status[i.status].color"
+						[nzText]="status[i.status].label"
+					></nz-badge>
+				</ng-template>
+			</st>
+		</nz-card>
+	</div>
+</div>

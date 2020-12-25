@@ -1,0 +1,52 @@
+<div class="modal-header">
+	<div class="modal-title">参观详情</div>
+</div>
+
+<h4><strong>联系人信息</strong></h4>
+<sf #sf [schema]="schema" compact button="none"> </sf>
+
+<nz-row>
+	<nz-col nzSpan="8">
+		<h4><strong>调查问卷</strong></h4>
+		<div
+			*ngFor="let survey_tag of data.record.survey_tags; let i = index"
+			class="mb-sm"
+		>
+			<p class="mb-sm">
+				<strong>
+					{{ i + 1 }}.&nbsp;{{
+						survey_tag.name.zh || survey_tag.name.en || '-'
+					}}
+				</strong>
+			</p>
+			<nz-tag *ngFor="let survey of survey_tag.surveys">
+				{{ survey.name.zh || survey.name.en || '-' }}
+			</nz-tag>
+		</div>
+	</nz-col>
+
+	<nz-col nzSpan="16">
+		<h3><strong>邀请同事</strong></h3>
+		<st
+			#st
+			[columns]="columns"
+			[data]="data.record.friends || []"
+			[total]="data.record.friends?.length || 0"
+			[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		>
+		</st>
+	</nz-col>
+</nz-row>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">关 闭</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save()"
+		[disabled]="!sf.valid"
+	>
+		保 存
+	</button>
+</div>

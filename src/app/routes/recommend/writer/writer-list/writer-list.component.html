@@ -1,0 +1,41 @@
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div></div>
+		<div>
+			<button
+				nz-button
+				(click)="openRecommendSeller()"
+				[nzType]="'primary'"
+			>
+				<span>添加推荐</span>
+			</button>
+		</div>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="writer_link" let-i>
+			<a
+				*ngIf="i.writer"
+				[attr.href]="
+					'http://www.antway.cn/writer/detail?id=' + i.writer.id
+				"
+				target="_blank"
+			>
+				{{ i.writer?.name?.zh || i.writer?.name?.en || '-' }}</a
+			>
+		</ng-template>
+	</st>
+</nz-card>

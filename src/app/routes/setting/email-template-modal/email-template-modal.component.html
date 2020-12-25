@@ -1,0 +1,64 @@
+<div class="modal-header">
+	<div class="modal-title">
+		修改信息模板
+	</div>
+</div>
+<sf #sf mode="edit" [schema]="schema" [compact]="true" button="none"> </sf>
+
+<nz-tabset [nzTabBarStyle]="{ 'margin-left': '120px' }">
+	<nz-tab nzTitle="中文" [nzForceRender]="true">
+		<se-container col="1" labelWidth="120">
+			<se label="主题" required>
+				<input
+					type="text"
+					nz-input
+					nzSize="small"
+					[(ngModel)]="data.record.subject_zh"
+					name="subject_zh"
+					required
+				/>
+			</se>
+			<se label="正文" required>
+				<div style="min-height: 334px;">
+					<app-wang-editor
+						[(content)]="data.record.body_zh"
+					></app-wang-editor>
+				</div>
+			</se>
+		</se-container>
+	</nz-tab>
+	<nz-tab nzTitle="英文" [nzForceRender]="true">
+		<se-container col="1" labelWidth="120">
+			<se label="主题" required>
+				<input
+					type="text"
+					nz-input
+					nzSize="small"
+					[(ngModel)]="data.record.subject_en"
+					name="subject_en"
+					required
+				/>
+			</se>
+			<se label="正文" required>
+				<div style="min-height: 334px;">
+					<app-wang-editor
+						[(content)]="data.record.body_en"
+					></app-wang-editor>
+				</div>
+			</se>
+		</se-container>
+	</nz-tab>
+</nz-tabset>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save(sf.value)"
+		[disabled]="!sf.valid"
+	>
+		确 定
+	</button>
+</div>

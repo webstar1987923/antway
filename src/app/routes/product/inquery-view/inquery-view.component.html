@@ -1,0 +1,149 @@
+<div class="modal-header">
+	<div class="modal-title">询盘详情</div>
+</div>
+
+<nz-row nzGutter="48">
+	<nz-col nzSpan="10" style="border-right: solid 2px #f0f0f0">
+		<h4><strong>询盘信息</strong></h4>
+		<div *ngIf="data.record.product" class="product mt-sm mb-lg">
+			<img
+				[_src]="
+					data.record.product.images[0] &&
+					data.record.product.images[0].url
+						? data.record.product.images[0].url
+						: ''
+				"
+				error="assets/img/empty.png"
+				alt="product"
+			/>
+			<a
+				[attr.href]="
+					'http://www.antway.cn/product/detail/' +
+					data.record.product.id
+				"
+				target="_blank"
+			>
+				{{
+					data.record.product?.name?.zh ||
+						data.record.product?.name?.en ||
+						'-'
+				}}
+			</a>
+		</div>
+
+		<h4><strong>希望了解</strong></h4>
+		<div class="mt-sm mb-lg">
+			<span
+				*ngFor="
+					let inqueryitem of data.record.inqueryitems;
+					let i = index
+				"
+			>
+				{{ i ? ', ' : '' }}{{ inqueryitem.name }}
+			</span>
+			<span *ngIf="!data.record.inqueryitems.length">-</span>
+		</div>
+
+		<h4><strong>收件人</strong></h4>
+		<div class="mt-sm mb-lg">
+			<div class="text-primary nobreak">
+				<a
+					[attr.href]="
+						'http://www.antway.cn/company/home?id=' +
+						data.record.receiver.id
+					"
+					target="_blank"
+				>
+					{{
+						data.record.receiver?.name?.zh ||
+							data.record.receiver?.name?.en ||
+							'-'
+					}}</a
+				>
+			</div>
+			<app-user-go [data]="data.record.receiver.manager"></app-user-go>
+			<sv-container size="small" col="2" gutter="0">
+				<sv label="收件总数">
+					{{ data.record.receiver?.purchase_cnt || 0 }}
+				</sv>
+				<sv label="询盘总数">{{
+					data.record.receiver?.manager?.purchase_cnt || 0
+				}}</sv>
+			</sv-container>
+		</div>
+
+		<h4><strong>发件人</strong></h4>
+		<div class="mt-sm mb-lg">
+			<div class="text-primary nobreak">
+				<a
+					[attr.href]="
+						'http://www.antway.cn/company/home?id=' +
+						data.record.sender?.company?.id
+					"
+					target="_blank"
+				>
+					{{
+						data.record.sender?.company?.name?.zh ||
+							data.record.sender?.company?.name?.en ||
+							'-'
+					}}</a
+				>
+			</div>
+			<app-user-go [data]="data.record.sender"></app-user-go>
+			<sv-container size="small" col="2" gutter="0">
+				<sv label="询盘总数">{{
+					data.record.sender?.purchase_cnt || 0
+				}}</sv>
+				<sv label="收件总数">{{
+					data.record.sender?.company?.purchase_cnt || 0
+				}}</sv>
+			</sv-container>
+		</div>
+	</nz-col>
+	<nz-col nzSpan="14">
+		<div
+			*ngFor="let thread of data.record.threads"
+			[class.inquery-answer]="thread.user_id != data.record.user_id"
+		>
+			<span class="text-grey">
+				{{ thread.created_at | date: 'yyyy/MM/dd HH:mm:ss' }}
+			</span>
+			<p class="mb-0">
+				<strong>{{ thread.title ? thread.title : '' }}</strong>
+			</p>
+			<span class="text-grey">
+				{{ thread.content ? thread.content : '' }}
+			</span>
+			<!-- <nz-upload [nzFileList]="data.record.product.images">
+			</nz-upload> -->
+			<div *ngIf="thread.assets?.length">
+				<span>
+					<i nz-icon nzType="paper-clip" nzTheme="outline"></i>
+				</span>
+				<span *ngFor="let file of thread.assets">
+					<a
+						nz-button
+						nzType="link"
+						[href]="file.url"
+						target="_blank"
+						>{{ file.url.split('/').pop() || '-' }}</a
+					>
+				</span>
+			</div>
+			<!-- <div
+				class="my-md ml-lg pl-sm"
+				style="border-left: solid 3px #f0f0f0"
+			>
+				<span class="text-grey">{{
+					thread.created_at | date: 'yyyy/MM/dd HH:mm:ss'
+				}}</span>
+				<p class="mb-0">
+					<strong>{{ thread.title ? thread.title : '' }}</strong>
+				</p>
+				<span class="text-grey">{{
+					thread.content ? thread.content : ''
+				}}</span>
+			</div> -->
+		</div>
+	</nz-col>
+</nz-row>

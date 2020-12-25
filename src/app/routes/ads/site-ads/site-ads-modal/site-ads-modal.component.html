@@ -1,0 +1,84 @@
+<div class="modal-header">
+	<div class="modal-title">
+		{{ data.record.id == null ? '添加' : '修改' }}站内广告
+	</div>
+</div>
+<sf #sf mode="edit" [schema]="schema" button="none">
+	<se-container labelWidth="120">
+		<se label="广告图" col="1" required>
+			<p class="text-grey">建议尺寸: 326px * 206px</p>
+			<nz-row nzGutter="24">
+				<nz-upload
+					nz-col
+					nzSpan="12"
+					nzAccept="image/*"
+					[(nzFileList)]="fileList[0]"
+					[nzFileListRender]="uploadTpl"
+					[nzBeforeUpload]="beforeUploadZh"
+				>
+					<button nz-button>
+						<i nz-icon nzType="upload"></i>
+						<span>上 传</span>
+					</button>
+					<span class="mx-md">PC端-中文</span>
+				</nz-upload>
+				<nz-upload
+					nz-col
+					nzSpan="12"
+					nzAccept="image/*"
+					[(nzFileList)]="fileList[1]"
+					[nzFileListRender]="uploadTpl"
+					[nzBeforeUpload]="beforeUploadEn"
+				>
+					<button nz-button>
+						<i nz-icon nzType="upload"></i>
+						<span>上 传</span>
+					</button>
+					<span class="mx-md">PC端-英文</span>
+				</nz-upload>
+			</nz-row>
+		</se>
+	</se-container>
+	<div class="modal-footer">
+		<button nz-button type="button" (click)="close()">取 消</button>
+		<button
+			nz-button
+			type="submit"
+			[nzType]="'primary'"
+			(click)="save(sf.value)"
+			[disabled]="!(sf.valid && isValidForm())"
+		>
+			确 定
+		</button>
+	</div>
+
+	<ng-template #uploadTpl let-list>
+		<nz-row nzGutter="24">
+			<nz-col *ngFor="let item of list" class="mt-sm">
+				<div nz-row nzAlign="middle" class="media-wrap">
+					<img
+						[_src]="item.url ? item.url : ''"
+						error="assets/img/empty.png"
+						alt="Avatar"
+					/>
+					<div nz-row class="inline-buttons">
+						<div
+							nz-col
+							nzSpan="24"
+							(click)="removeAsset(item)"
+							style="background-color: rgba(255, 0, 0, 0.43);"
+						>
+							删 除
+						</div>
+					</div>
+				</div>
+				<input
+					nz-input
+					style="min-width: 88px;"
+					[(ngModel)]="item.redirect_url"
+					[ngModelOptions]="{ standalone: true }"
+				/>
+			</nz-col>
+		</nz-row>
+	</ng-template>
+</sf>

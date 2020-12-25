@@ -1,0 +1,26 @@
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div></div>
+		<div>
+			<button nz-button (click)="openModal()" [nzType]="'primary'">
+				<span>添加站内广告</span>
+			</button>
+		</div>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+	</st>
+</nz-card>

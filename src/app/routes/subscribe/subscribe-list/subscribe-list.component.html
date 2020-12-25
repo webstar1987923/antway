@@ -1,0 +1,71 @@
+<nz-card [nzBordered]="false">
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="email">邮箱地址</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.email"
+							name="email"
+							placeholder="请输入搜索邮箱地址"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="keyword">关键词</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.keyword"
+							name="keyword"
+							placeholder="请输入搜索关键词"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="12" class="text-right">
+				<button nz-button type="submit" [nzType]="'primary'">
+					查询
+				</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div></div>
+		<div>
+			<button nz-button (click)="openSubscribeModal()">
+				<span>查看关键词排行</span>
+			</button>
+		</div>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+	</st>
+</nz-card>

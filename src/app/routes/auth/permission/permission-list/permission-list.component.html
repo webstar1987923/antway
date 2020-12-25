@@ -1,0 +1,135 @@
+<div
+	*ngIf="permissionModuleList && permissionModuleList.length"
+	nz-row
+	nzGutter="24"
+>
+	<div nz-col [nzSpan]="4">
+		<nz-card
+			[nzBordered]="true"
+			[nzTitle]="permissionModuleListHeader"
+			nzType="inner"
+			[nzBodyStyle]="{ 'background-color': '#F5F5F5' }"
+		>
+			<ng-template #permissionModuleListHeader>
+				<strong>系统模块</strong>
+			</ng-template>
+			<div
+				*ngFor="let item of permissionModuleList"
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				[class.bg-white]="item.id == selectedPermissionModule.id"
+				[class.text-primary]="
+					item.isActive || item.id == selectedPermissionModule.id
+				"
+				class="p-sm point"
+				style="border-radius: 5px;"
+				(click)="selectPermissionModule(item)"
+				(mouseenter)="item.isActive = true"
+				(mouseleave)="item.isActive = false"
+			>
+				<div nz-col>
+					<strong>{{ item.name }}</strong>
+				</div>
+			</div>
+		</nz-card>
+	</div>
+
+	<div *ngIf="selectedPermissionModule" nz-col [nzSpan]="20">
+		<nz-card [nzBordered]="false">
+			<form
+				nz-form
+				[nzLayout]="'inline'"
+				(ngSubmit)="getAdminPermissions()"
+			>
+				<div nz-col nzSpan="8">
+					<nz-form-item>
+						<nz-form-label nzFor="name">节点名称</nz-form-label>
+						<nz-form-control>
+							<input
+								nz-input
+								[(ngModel)]="queryParams.name"
+								name="name"
+								placeholder="请输入请求路径"
+								id="name"
+							/>
+						</nz-form-control>
+					</nz-form-item>
+				</div>
+				<div nz-col nzSm="8">
+					<nz-form-item>
+						<nz-form-label nzFor="route">请求路径</nz-form-label>
+						<nz-form-control>
+							<input
+								nz-input
+								[(ngModel)]="queryParams.route"
+								name="route"
+								placeholder="请输入请求路径"
+								id="route"
+							/>
+						</nz-form-control>
+					</nz-form-item>
+				</div>
+				<div nz-col nzSpan="8" class="text-right">
+					<button nz-button type="submit" [nzType]="'primary'">
+						查询
+					</button>
+					<button
+						nz-button
+						type="reset"
+						(click)="reset()"
+						class="ml-sm"
+					>
+						重置
+					</button>
+				</div>
+			</form>
+		</nz-card>
+		<nz-card [nzBordered]="false">
+			<div
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				class="mb-md"
+			>
+				<div>
+					<strong>所有模块节点列表</strong>
+				</div>
+				<div>
+					<button
+						nz-button
+						(click)="openPermissionModal()"
+						[nzType]="'primary'"
+					>
+						<span>添加节点</span>
+					</button>
+					<button
+						nz-button
+						(click)="remove()"
+						[nzType]="'primary'"
+						nzDanger
+					>
+						<span>批量删除</span>
+					</button>
+				</div>
+			</div>
+			<st
+				#st
+				[columns]="columns"
+				[data]="list"
+				[loading]="loading"
+				[total]="total"
+				[page]="{ front: false, showSize: true, showQuickJumper: true }"
+				(change)="stChange($event)"
+			>
+				<ng-template st-row="status" let-i>
+					<nz-tag [nzColor]="i.status == 1 ? 'green' : 'red'">{{
+						i.status == 1 ? '启用' : '禁用'
+					}}</nz-tag>
+				</ng-template>
+			</st>
+		</nz-card>
+	</div>
+</div>

@@ -1,0 +1,21 @@
+<div>
+	<h4>
+		<strong>总余额: {{ total_wallet || 0 }}</strong>
+	</h4>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[total]="total"
+	[loading]="loading"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+	<ng-template st-row="status" let-i>
+		<nz-badge
+			[nzColor]="status[i.status]?.color"
+			[nzText]="status[i.status]?.label"
+		></nz-badge>
+	</ng-template>
+</st>

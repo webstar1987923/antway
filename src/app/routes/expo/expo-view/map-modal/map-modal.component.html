@@ -1,0 +1,53 @@
+<div class="modal-header">
+	<div class="modal-title">修改展馆地图</div>
+</div>
+
+<se-container size="compact" labelWidth="140">
+	<se label="地图JON文件" col="1" required>
+		<nz-upload
+			nz-col
+			nzAccept=".json"
+			[(nzFileList)]="mapList[0]"
+			[nzFileListRender]="fileTpl"
+			[nzBeforeUpload]="beforeUploadJs"
+		>
+			<button nz-button>
+				<i nz-icon nzType="upload"></i>
+				<span>上 传</span>
+			</button>
+		</nz-upload>
+	</se>
+	<se label="地图背景" col="1" required>
+		<nz-upload
+			nz-col
+			nzAccept="image/*"
+			[(nzFileList)]="mapList[1]"
+			[nzFileListRender]="fileTpl"
+			[nzBeforeUpload]="beforeUploadBg"
+		>
+			<button nz-button>
+				<i nz-icon nzType="upload"></i>
+				<span>上 传</span>
+			</button>
+		</nz-upload>
+	</se>
+</se-container>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		[nzType]="'primary'"
+		(click)="save()"
+		[disabled]="!isValidForm()"
+	>
+		确 定
+	</button>
+</div>
+
+<ng-template #fileTpl let-list>
+	<div nz-row nzAlign="middle" *ngFor="let item of list" class="my-md">
+		<span><i nz-icon nzType="paper-clip" nzTheme="outline"></i></span>
+		<span>{{ item.name }}</span>
+	</div>
+</ng-template>

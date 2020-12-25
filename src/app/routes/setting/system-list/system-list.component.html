@@ -1,0 +1,190 @@
+<nz-list [nzDataSource]="list" [nzLoading]="loading">
+	<nz-list-header><strong>系统参数</strong></nz-list-header>
+	<nz-list-item *ngFor="let item of list" [nzContent]="nzContent">
+		<ng-template #nzContent>
+			<!-- 文具通会员分配VIP会员限制数量 -->
+			<div *ngIf="item.tag == 'stationery_members'">
+				<p>文具通会员分配VIP会员限制数量</p>
+				<nz-row class="text-grey">
+					<span>当前限制数量:&nbsp;</span>
+					<span *ngIf="!item.editable">{{ item.value }}</span>
+					<span>
+						<input
+							*ngIf="item.editable"
+							type="number"
+							nz-input
+							nzSize="small"
+							[(ngModel)]="item.value"
+							name="stationery_members"
+							required
+						/>
+					</span>
+				</nz-row>
+			</div>
+			<!-- 用户预登记参观后默认审核状态 -->
+			<div *ngIf="item.tag == 'default_buyer_status'">
+				<p>用户预登记参观后默认审核状态</p>
+				<div class="text-grey">
+					<span>当前设置状态: </span>
+					<span *ngIf="!item.editable">
+						{{ expoBuyerChecked[item.value].label }}
+					</span>
+					<span>
+						<nz-select
+							*ngIf="item.editable"
+							nzSize="small"
+							[(ngModel)]="+item.value"
+							style="width: 130px"
+						>
+							<nz-option
+								*ngFor="let option of expoBuyerChecked"
+								[nzValue]="option.value"
+								[nzLabel]="option.label"
+							></nz-option>
+						</nz-select>
+					</span>
+				</div>
+			</div>
+			<!-- 用户预登记参观后默认审核状态 -->
+			<div *ngIf="item.tag == 'default_vip_status'">
+				<p>用户提交VIP后默认审核状态</p>
+				<div class="text-grey">
+					<span>当前设置状态: </span>
+					<span *ngIf="!item.editable">
+						{{ vipStatus[item.value].label }}
+					</span>
+					<span>
+						<nz-select
+							*ngIf="item.editable"
+							nzSize="small"
+							[(ngModel)]="+item.value"
+							style="width: 130px"
+						>
+							<nz-option
+								*ngFor="let option of vipStatus"
+								[nzValue]="option.value"
+								[nzLabel]="option.label"
+							></nz-option>
+						</nz-select>
+					</span>
+				</div>
+			</div>
+			<!-- 推广邀请金额 -->
+			<div *ngIf="item.tag == 'promotion_invitation_money'">
+				<p>推广邀请金额</p>
+				<nz-row class="text-grey">
+					<span>当前设置金额:&nbsp;</span>
+					<span *ngIf="!item.editable">{{ item.value }}</span>
+					<span>
+						<input
+							*ngIf="item.editable"
+							type="number"
+							nz-input
+							nzSize="small"
+							[(ngModel)]="item.value"
+							name="promotion_invitation_money"
+							required
+						/>
+					</span>
+				</nz-row>
+			</div>
+			<!-- 换率: 人民币->美元 -->
+			<div *ngIf="item.tag == 'cny_usd'">
+				<p>换率: 人民币->美元</p>
+				<nz-row class="text-grey">
+					<span>当前设置金额:&nbsp;</span>
+					<span *ngIf="!item.editable">{{ item.value }}</span>
+					<span>
+						<input
+							*ngIf="item.editable"
+							type="number"
+							nz-input
+							nzSize="small"
+							[(ngModel)]="item.value"
+							name="cny_usd"
+							required
+						/>
+					</span>
+				</nz-row>
+			</div>
+			<!-- 换率: 美元->人民币 -->
+			<div *ngIf="item.tag == 'usd_cny'">
+				<p>换率: 美元->人民币</p>
+				<nz-row class="text-grey">
+					<span>换率： 美元-＞人民币:&nbsp;</span>
+					<span *ngIf="!item.editable">{{ item.value }}</span>
+					<span>
+						<input
+							*ngIf="item.editable"
+							type="number"
+							nz-input
+							nzSize="small"
+							[(ngModel)]="item.value"
+							name="usd_cny"
+							required
+						/>
+					</span>
+				</nz-row>
+			</div>
+			<!-- VIP price -->
+			<div *ngIf="item.tag == 'vip_price'">
+				<p>VIP会员费</p>
+				<nz-row class="text-grey">
+					<span>VIP会员费:&nbsp;</span>
+					<span *ngIf="!item.editable">{{ item.value }}</span>
+					<span>
+						<input
+							*ngIf="item.editable"
+							type="number"
+							nz-input
+							nzSize="small"
+							[(ngModel)]="item.value"
+							name="vip_price"
+							required
+						/>
+					</span>
+				</nz-row>
+			</div>
+			<!-- Stationery price -->
+			<div *ngIf="item.tag == 'stationery_price'">
+				<p>文具通会员费</p>
+				<nz-row class="text-grey">
+					<span>文具通会员费:&nbsp;</span>
+					<span *ngIf="!item.editable">{{ item.value }}</span>
+					<span>
+						<input
+							*ngIf="item.editable"
+							type="number"
+							nz-input
+							nzSize="small"
+							[(ngModel)]="item.value"
+							name="stationery_price"
+							required
+						/>
+					</span>
+				</nz-row>
+			</div>
+			<ul nz-list-item-actions>
+				<nz-list-item-action>
+					<a *ngIf="!item.editable" (click)="item.editable = 1">
+						修改
+					</a>
+					<a
+						*ngIf="item.editable"
+						class="ml-md"
+						(click)="item.editable = 0; refresh()"
+					>
+						收起
+					</a>
+					<a
+						*ngIf="item.editable"
+						class="ml-md"
+						(click)="item.editable = 0; save(item)"
+					>
+						保存
+					</a>
+				</nz-list-item-action>
+			</ul>
+		</ng-template>
+	</nz-list-item>
+</nz-list>

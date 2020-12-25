@@ -1,0 +1,105 @@
+<div class="alain-default__content-title">
+	<h1>
+		产品分类
+	</h1>
+</div>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div>
+			<button
+				nz-button
+				(click)="openCategoryModal()"
+				[nzType]="'primary'"
+			>
+				<span>添加分类</span>
+			</button>
+		</div>
+	</div>
+	<nz-tree
+		#treeNodes
+		nzBlockNode
+		nzDraggable
+		nzShowLine
+		[nzData]="list"
+		[nzTreeTemplate]="nzTreeTemplate"
+		(nzOnDragEnd)="nzOnDragEnd($event)"
+	>
+	</nz-tree>
+	<ng-template #nzTreeTemplate let-node let-origin="origin">
+		<div
+			nz-row
+			[nzType]="'flex'"
+			[nzJustify]="'space-between'"
+			[nzAlign]="'middle'"
+		>
+			<span>
+				<span>
+					<img
+						*ngIf="node.parentNode?.key == 0"
+						[_src]="
+							node.origin.assets &&
+							node.origin.assets[0] &&
+							node.origin.assets[0].url
+								? node.origin.assets[0].url
+								: ''
+						"
+						error="assets/img/empty.png"
+						alt="Category"
+						class="category_icon bg-image"
+					/>
+					{{ origin.name ? origin.name.zh : '' }}&nbsp;|&nbsp;{{
+						origin.name ? origin.name.en : ''
+					}}
+				</span>
+				<span
+					*ngIf="
+						node.parentNode?.key == 0 &&
+						node.origin &&
+						node.origin.companies &&
+						node.origin.companies.length
+					"
+					class="ml-lg"
+				>
+					<span class="mr-sm">推荐企业:</span>
+					<nz-tag
+						*ngFor="let compnay of node.origin.companies"
+						[nzColor]="'purple'"
+						>{{ compnay.name.zh }}
+					</nz-tag>
+				</span>
+			</span>
+			<div>
+				<i
+					nz-icon
+					nzType="plus"
+					class="pr-sm"
+					(click)="
+						$event.stopPropagation();
+						openCategoryModal('create', node)
+					"
+				></i>
+				<i
+					nz-icon
+					nzType="edit"
+					class="pr-sm"
+					(click)="
+						$event.stopPropagation();
+						openCategoryModal('edit', node)
+					"
+				></i>
+				<i
+					nz-icon
+					nzType="delete"
+					class="pr-sm"
+					(click)="$event.stopPropagation(); remove(node)"
+				></i>
+			</div>
+		</div>
+	</ng-template>
+</nz-card>

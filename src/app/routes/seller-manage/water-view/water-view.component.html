@@ -1,0 +1,81 @@
+<div class="modal-header">
+	<div class="modal-title">
+		水电申请 -
+		{{ data.record.expo.name ? data.record.expo.name.zh : '-' }}
+		-
+		{{
+			data.record.user.company.name
+				? data.record.user.company.name.zh
+				: '-'
+		}}
+	</div>
+</div>
+<div
+	nz-row
+	[nzType]="'flex'"
+	[nzJustify]="'space-between'"
+	[nzAlign]="'middle'"
+	class="mb-md"
+>
+	<nz-col [nzSpan]="12">
+		<form nz-form #statusForm="ngForm" se-container>
+			<nz-row class="w-100 py-1" style="flex-flow: row;" nzGutter="16">
+				<nz-col [nzSpan]="16">
+					<nz-form-item class="mb-0">
+						<nz-form-label nzFor="status">
+							处理状态
+						</nz-form-label>
+						<nz-form-control>
+							<nz-select
+								name="status"
+								[(ngModel)]="data.record.status"
+								nzPlaceHolder="处理状态"
+								required
+							>
+								<nz-option
+									*ngFor="let i of status; let idx = index"
+									[nzLabel]="i.label"
+									[nzValue]="i.value"
+								>
+								</nz-option>
+							</nz-select>
+						</nz-form-control>
+					</nz-form-item>
+				</nz-col>
+				<div nz-col style="align-self: center;">
+					<button
+						nz-button
+						type="submit"
+						[nzType]="'primary'"
+						[disabled]="
+							!statusForm.form.valid || !statusForm.form.dirty
+						"
+						(click)="saveStatus(statusForm)"
+					>
+						保 存
+					</button>
+				</div>
+			</nz-row>
+		</form>
+	</nz-col>
+	<nz-col>
+		<button nz-button (click)="download()" nzType="default">
+			<span>数据导出</span>
+		</button>
+	</nz-col>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+	<ng-template st-row="status" let-i>
+		<nz-badge
+			[nzColor]="status[i.status].color"
+			[nzText]="status[i.status].label"
+		></nz-badge>
+	</ng-template>
+</st>

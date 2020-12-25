@@ -1,0 +1,92 @@
+<nz-card [nzBordered]="false">
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="name">展位</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.name"
+							name="name"
+							placeholder="请输入搜索展位编号"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="company_name">企业名称</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.company_name"
+							name="company_name"
+							placeholder="请输入搜索企业名称"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="company_phone">手机号</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.company_phone"
+							name="company_phone"
+							placeholder="请输入搜索手机号"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6" class="text-right">
+				<button nz-button type="submit" [nzType]="'primary'">
+					查询
+				</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="product" let-i>
+			<div class="product">
+				<img
+					[_src]="
+						i.images[0] && i.images[0].url ? i.images[0].url : ''
+					"
+					error="assets/img/empty.png"
+					alt="Avatar"
+				/>
+				<sv-container size="small" col="1" gutter="0">
+					<sv label="产品序号">{{ i.serial || '-' }}</sv>
+					<span class="nobreak">{{ i.name.zh }}</span>
+					<sv label="产品分类">{{ i.category.name.zh || '-' }}</sv>
+				</sv-container>
+			</div>
+		</ng-template>
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.status].color"
+				[nzText]="status[i.status].label"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

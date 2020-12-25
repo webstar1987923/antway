@@ -1,0 +1,243 @@
+<nz-card [nzBordered]="false">
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="email">邮箱</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.email"
+							name="email"
+							placeholder="请输入搜索邮箱"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="name">姓名</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.name"
+							name="name"
+							placeholder="请输入搜索姓名"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="phone">手机号</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.phone"
+							name="phone"
+							placeholder="请输入搜索手机号"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="2">
+				<a nz-button nzType="link" (click)="expandForm = !expandForm">
+					{{ expandForm ? '收起' : '高级搜索 ' }}
+					<i nz-icon [nzType]="expandForm ? 'up' : 'down'"></i>
+				</a>
+			</div>
+			<div nz-col nzSpan="4" class="text-right">
+				<button nz-button type="submit" [nzType]="'primary'">
+					查询
+				</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+			<div nz-col nzSpan="6" *ngIf="expandForm">
+				<nz-form-item>
+					<nz-form-label nzFor="company_name">公司名称</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.company_name"
+							name="company_name"
+							placeholder="请输入搜索公司名称"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6" *ngIf="expandForm">
+				<nz-form-item>
+					<nz-form-label nzFor="country">国家</nz-form-label>
+					<nz-form-control>
+						<nz-select
+							[(ngModel)]="queryParams.country"
+							name="country"
+							id="country"
+							[nzPlaceHolder]="'请输入搜索国家'"
+							[nzShowSearch]="true"
+							nzAllowClear
+							(ngModelChange)="selectCountry()"
+						>
+							<nz-option
+								*ngFor="let i of countries; let idx = index"
+								[nzLabel]="i.name"
+								[nzValue]="i.code"
+							>
+							</nz-option>
+						</nz-select>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6" *ngIf="expandForm">
+				<nz-form-item>
+					<nz-form-label nzFor="region">地区</nz-form-label>
+					<nz-form-control>
+						<nz-select
+							[(ngModel)]="queryParams.region"
+							name="region"
+							id="region"
+							[nzPlaceHolder]="'请输入搜索地区'"
+							[nzShowSearch]="true"
+							nzAllowClear
+						>
+							<nz-option
+								*ngFor="let i of regions; let idx = index"
+								[nzLabel]="i.name"
+								[nzValue]="i.id"
+							>
+							</nz-option>
+						</nz-select>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6" *ngIf="expandForm">
+				<nz-form-item>
+					<nz-form-label nzFor="position">客户意向</nz-form-label>
+					<nz-form-control>
+						<nz-select
+							[(ngModel)]="queryParams.intention"
+							name="intention"
+							id="intention"
+							[nzPlaceHolder]="'请输入搜索客户意向'"
+							[nzShowSearch]="true"
+							nzAllowClear
+						>
+							<nz-option
+								*ngFor="let i of intention; let idx = index"
+								[nzLabel]="i.label"
+								[nzValue]="i.value"
+							>
+							</nz-option>
+						</nz-select>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6" *ngIf="expandForm">
+				<nz-form-item>
+					<nz-form-label nzFor="position">经营性质</nz-form-label>
+					<nz-form-control>
+						<nz-select
+							[(ngModel)]="queryParams.mgmodel_id"
+							name="mgmodel_id"
+							id="mgmodel_id"
+							[nzPlaceHolder]="'请输入搜索经营性质'"
+							[nzShowSearch]="true"
+							nzAllowClear
+						>
+							<nz-option
+								*ngFor="let i of mgmodels; let idx = index"
+								[nzLabel]="i.name.zh"
+								[nzValue]="i.id"
+							>
+							</nz-option>
+						</nz-select>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div></div>
+		<nz-row>
+			<!-- <nz-upload
+				nz-col
+				nzAccept=".csv, .xls, .xlsx"
+				[nzBeforeUpload]="beforeUploadFile"
+				class="mr-sm"
+			>
+				<button nz-button>
+					<span>批量导入</span>
+				</button>
+			</nz-upload>
+			<button nz-button (click)="downloadTemplate()">
+				<span>下载批量导入模板</span>
+			</button> -->
+			<button nz-button (click)="download()">
+				<span>导出搜索结果</span>
+			</button>
+			<button nz-button (click)="openUserModal()" [nzType]="'primary'">
+				<span>添加用户</span>
+			</button>
+			<button nz-button (click)="remove()" [nzType]="'primary'" nzDanger>
+				<span>批量删除</span>
+			</button>
+			<button nz-button nz-dropdown [nzDropdownMenu]="menuMore">
+				批量操作
+				<i nz-icon nzType="down"></i>
+			</button>
+			<nz-dropdown-menu #menuMore="nzDropdownMenu">
+				<ul nz-menu>
+					<li nz-menu-item (click)="openEmailModal()">发送邮件</li>
+					<li nz-menu-item (click)="openMessageModal()">发送消息</li>
+				</ul>
+			</nz-dropdown-menu>
+		</nz-row>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="status_verified" let-i>
+			<nz-badge
+				[nzColor]="userVerifyStatus[i.status_verified].color"
+				[nzText]="userVerifyStatus[i.status_verified].label"
+			></nz-badge>
+		</ng-template>
+		<ng-template st-row="vip_status" let-i>
+			<nz-badge
+				[nzColor]="vipStatus[i.viplog?.status || 0].color"
+				[nzText]="vipStatus[i.viplog?.status || 0].label"
+			></nz-badge>
+		</ng-template>
+		<ng-template st-row="stationery_status" let-i>
+			<nz-badge
+				[nzColor]="
+					vipStatus[i.company?.stationerylog?.status || 0].color
+				"
+				[nzText]="
+					vipStatus[i.company?.stationerylog?.status || 0].label
+				"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

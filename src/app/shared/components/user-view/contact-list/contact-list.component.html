@@ -1,0 +1,183 @@
+<nz-row>
+	<nz-col [nzSpan]="4">
+		<strong>计划联络时间</strong>
+		<span>{{
+			list.length ? (list[0].next_at | date: 'yyyy/MM/dd HH:mm:ss') : '-'
+		}}</span>
+	</nz-col>
+	<nz-col [nzSpan]="20">
+		<form nz-form #contactForm="ngForm" se-container>
+			<div nz-row class="w-100 py-1" style="flex-flow: row" nzGutter="16">
+				<div nz-col nzFlex="auto">
+					<div nz-row nzGutter="16">
+						<div nz-col [nzSpan]="16">
+							<div
+								nz-row
+								[nzType]="'flex'"
+								[nzJustify]="'start'"
+								[nzAlign]="'middle'"
+								nzGutter="16"
+							>
+								<nz-col [nzSpan]="12">
+									<nz-form-item>
+										<nz-form-control>
+											<nz-select
+												name="expo_id"
+												[(ngModel)]="newContact.expo"
+												[nzPlaceHolder]="'选择展会名称'"
+												required
+											>
+												<nz-option
+													*ngFor="
+														let i of expoList;
+														let idx = index
+													"
+													[nzLabel]="
+														i.name ? i.name.zh : ''
+													"
+													[nzValue]="i.id"
+												>
+												</nz-option>
+											</nz-select>
+										</nz-form-control>
+									</nz-form-item>
+								</nz-col>
+								<nz-col [nzSpan]="12">
+									<nz-form-item>
+										<nz-form-control>
+											<nz-select
+												name="intention"
+												[(ngModel)]="
+													newContact.intention
+												"
+												[nzPlaceHolder]="'客户意向'"
+												required
+											>
+												<nz-option
+													*ngFor="
+														let i of intention;
+														let idx = index
+													"
+													[nzLabel]="i.label"
+													[nzValue]="i.value"
+												>
+												</nz-option>
+											</nz-select>
+										</nz-form-control>
+									</nz-form-item>
+								</nz-col>
+								<nz-col [nzSpan]="8">
+									<nz-form-item>
+										<nz-form-control>
+											<nz-select
+												name="method"
+												[(ngModel)]="
+													newContact.contactMethod
+												"
+												[nzPlaceHolder]="'联系方式'"
+												required
+											>
+												<nz-option
+													*ngFor="
+														let i of contactMethodList;
+														let idx = index
+													"
+													[nzLabel]="i.name"
+													[nzValue]="i.name"
+												>
+												</nz-option>
+											</nz-select>
+										</nz-form-control>
+									</nz-form-item>
+								</nz-col>
+								<nz-col [nzSpan]="8">
+									<nz-form-item>
+										<nz-form-control>
+											<nz-select
+												name="result"
+												[(ngModel)]="
+													newContact.contackResult
+												"
+												[nzPlaceHolder]="'联系结果'"
+												required
+											>
+												<nz-option
+													*ngFor="
+														let i of contactResultList;
+														let idx = index
+													"
+													[nzLabel]="i.name"
+													[nzValue]="i.name"
+												>
+												</nz-option>
+											</nz-select>
+										</nz-form-control>
+									</nz-form-item>
+								</nz-col>
+								<nz-col [nzSpan]="8">
+									<nz-form-item>
+										<nz-form-control>
+											<nz-date-picker
+												name="next_at"
+												nzShowTime
+												[(ngModel)]="
+													newContact.nextContactTime
+												"
+												nzPlaceHolder="下次联络时间"
+												required
+											>
+											</nz-date-picker>
+										</nz-form-control>
+									</nz-form-item>
+								</nz-col>
+							</div>
+						</div>
+						<div nz-col [nzSpan]="8">
+							<nz-form-item>
+								<nz-form-control>
+									<textarea
+										nz-input
+										name="description"
+										[(ngModel)]="newContact.description"
+										placeholder="备注内容"
+										style="height: 88px"
+										required
+									></textarea>
+								</nz-form-control>
+							</nz-form-item>
+						</div>
+					</div>
+				</div>
+				<div nz-col class="pb-lg" style="align-self: center">
+					<button
+						nz-button
+						type="submit"
+						[nzType]="'primary'"
+						[disabled]="
+							!contactForm.form.valid || !contactForm.form.dirty
+						"
+						[nzLoading]="loading"
+						(click)="saveContact(contactForm)"
+					>
+						提 交
+					</button>
+				</div>
+			</div>
+		</form>
+	</nz-col>
+</nz-row>
+<h3><strong>申请参展记录</strong></h3>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[loading]="loading"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+>
+	<ng-template st-row="intention" let-i>
+		<span>{{
+			intention[i.intention] ? intention[i.intention].label : '-'
+		}}</span>
+	</ng-template>
+</st>

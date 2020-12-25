@@ -1,0 +1,56 @@
+<div class="modal-header">
+	<div class="modal-title">
+		{{ data.record.id == null ? '添加' : '修改' }}视频
+	</div>
+</div>
+
+<se-container *ngIf="!data.record.id" size="compact" labelWidth="140">
+	<se label="视频" col="1" required>
+		<nz-row>
+			<nz-upload
+				nz-col
+				nzAccept="video/*, image/*"
+				[(nzFileList)]="fileList"
+				[nzFileListRender]="videoTpl"
+				[nzBeforeUpload]="beforeUploadFile"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+			</nz-upload>
+		</nz-row>
+	</se>
+</se-container>
+
+<sf #sf [schema]="schema" compact button="none"> </sf>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save()"
+		[disabled]="!(sf.valid && isValidForm())"
+	>
+		确 定
+	</button>
+</div>
+
+<ng-template #videoTpl let-list>
+	<div nz-row nzAlign="middle" *ngFor="let item of list" class="my-md">
+		<video
+			*ngIf="checkFileType(item.originFileObj.type, 'video')"
+			controls
+			[src]="item.url ? item.url : ''"
+			style="display: block; height: 105px;"
+		></video>
+		<img
+			*ngIf="checkFileType(item.originFileObj.type, 'image')"
+			[_src]="item.url ? item.url : ''"
+			error="assets/img/empty.png"
+			alt="image"
+		/>
+	</div>
+</ng-template>

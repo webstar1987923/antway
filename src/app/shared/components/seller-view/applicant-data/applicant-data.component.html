@@ -1,0 +1,86 @@
+<sf #sf [schema]="schema" compact button="none">
+	<ng-template
+		sf-template="company_link"
+		let-me
+		let-ui="ui"
+		let-schema="schema"
+	>
+		<a
+			*ngIf="data.record.company"
+			[attr.href]="
+				'http://www.antway.cn/company/home?id=' + data.record.company.id
+			"
+			target="_blank"
+		>
+			{{
+				data.record.company?.name?.zh ||
+					data.record.company?.name?.en ||
+					'-'
+			}}</a
+		>
+	</ng-template>
+	<ng-template
+		sf-template="admin_checked"
+		let-me
+		let-ui="ui"
+		let-schema="schema"
+	>
+		<nz-select
+			[ngModel]="me.formProperty.value"
+			(ngModelChange)="me.setValue($event)"
+			[nzDisabled]="!!data.record.transaction"
+		>
+			<ng-container *ngFor="let o of expoSellerChecked">
+				<nz-option [nzValue]="o.value" [nzLabel]="o.label"></nz-option>
+			</ng-container>
+		</nz-select>
+	</ng-template>
+	<ng-template sf-template="calcPrice" let-me let-ui="ui" let-schema="schema">
+		<span>{{ calcPrice || 0 }}</span>
+	</ng-template>
+	<ng-template sf-template="amount" let-me let-ui="ui" let-schema="schema">
+		<nz-input-number
+			[(ngModel)]="me.formProperty.value"
+			(ngModelChange)="me.setValue($event)"
+			nzSize="small"
+			[nzMin]="1"
+			[nzStep]="1"
+			[nzDisabled]="!!data.record.transaction"
+		></nz-input-number>
+	</ng-template>
+	<ng-template sf-template="payStatus" let-me let-ui="ui" let-schema="schema">
+		<ng-container *ngIf="data.record.transaction; else notPaid">
+			<nz-tag nzColor="#52C41A"> 已支付 </nz-tag>
+			<span>
+				{{
+					data.record.transaction.processed_at
+						| date: 'yyyy/MM/dd hh:mm:ss'
+				}}
+			</span>
+		</ng-container>
+		<ng-template #notPaid>
+			<nz-tag nzColor="grey"> 未支付 </nz-tag>
+			<button
+				nz-button
+				nzSize="small"
+				nzType="link"
+				(click)="openPayModal()"
+				[disabled]="sf.value.admin_checked !== 1"
+			>
+				支付
+			</button>
+		</ng-template>
+	</ng-template>
+</sf>
+<div class="modal-footer mb-0 px-lg">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save(sf.value)"
+		[disabled]="!isValidForm()"
+	>
+		确 定
+	</button>
+</div>

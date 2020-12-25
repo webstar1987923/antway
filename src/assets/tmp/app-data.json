@@ -1,0 +1,240 @@
+{
+	"app": {
+		"name": "蚂蚁街",
+		"description": "蚂蚁街后台管理"
+	},
+	"menu": [
+		{
+			"text": "主导航",
+			"group": false,
+			"hideInBreadcrumb": true,
+			"children": [
+				{
+					"text": "权限管理",
+					"icon": "anticon-safety",
+					"children": [
+						{
+							"text": "员工管理",
+							"link": "/auth/staff"
+						},
+						{
+							"text": "角色管理",
+							"link": "/auth/role"
+						},
+						{
+							"text": "权限设置",
+							"link": "/auth/permission"
+						},
+						{
+							"text": "部门管理",
+							"link": "/auth/team"
+						}
+					]
+				},
+				{
+					"text": "会员管理",
+					"icon": "anticon-user",
+					"children": [
+						{
+							"text": "用户管理",
+							"link": "/user"
+						},
+						{
+							"text": "文具通会员",
+							"link": "/stationery"
+						},
+						{
+							"text": "媒体投稿会员",
+							"link": "/writer"
+						}
+					]
+				},
+				{
+					"text": "展会管理",
+					"icon": "anticon-bank",
+					"children": [
+						{
+							"text": "展会管理",
+							"link": "/expo"
+						},
+						{
+							"text": "参展管理",
+							"link": "/seller"
+						},
+						{
+							"text": "参展事务管理",
+							"link": "/seller-manage"
+						},
+						{
+							"text": "参观管理",
+							"link": "/buyer"
+						},
+						{
+							"text": "历届展会管理",
+							"link": "/past-expo"
+						}
+					]
+				},
+				{
+					"text": "营销管理",
+					"icon": "anticon-shop",
+					"children": [
+						{
+							"text": "推荐管理",
+							"link": "/recommend"
+						},
+						{
+							"text": "邀请函管理",
+							"link": "/invite"
+						},
+						{
+							"text": "推广管理",
+							"link": "/promotion"
+						},
+						{
+							"text": "广告管理",
+							"link": "/ads"
+						}
+					]
+				},
+				{
+					"text": "企业库管理",
+					"icon": "anticon-appstore",
+					"link": "/company"
+				},
+				{
+					"text": "媒体管理",
+					"icon": "anticon-video-camera",
+					"children": [
+						{
+							"text": "头条管理",
+							"link": "/article"
+						},
+						{
+							"text": "展会新闻",
+							"link": "/expo_news"
+						},
+						{
+							"text": "发现管理",
+							"link": "/discover"
+						},
+						{
+							"text": "视频管理",
+							"link": "/video"
+						}
+					]
+				},
+				{
+					"text": "分类管理",
+					"icon": "anticon-deployment-unit",
+					"children": [
+						{
+							"text": "产品分类",
+							"link": "/category/product"
+						},
+						{
+							"text": "资讯分类",
+							"link": "/category/news"
+						},
+						{
+							"text": "单位设置",
+							"link": "/category/product_unit"
+						},
+						{
+							"text": "职业分类",
+							"link": "/category/occupation"
+						},
+						{
+							"text": "经营性质",
+							"link": "/category/mgmodel"
+						},
+						{
+							"text": "广告位分类",
+							"link": "/category/advertising"
+						},
+						{
+							"text": "偏好类型",
+							"link": "/category/preference"
+						},
+						{
+							"text": "展会菜单管理",
+							"link": "/category/expo_menu"
+						},
+						{
+							"text": "展会内容分类",
+							"link": "/category/expo_content"
+						},
+						{
+							"text": "历届展会内容分类",
+							"link": "/category/past_expo_content"
+						},
+						{
+							"text": "参展调查问答",
+							"link": "/category/survey_seller"
+						},
+						{
+							"text": "参观调查问答",
+							"link": "/category/survey_buyer"
+						}
+					]
+				},
+				{
+					"text": "产品,交易管理",
+					"icon": "anticon-shop",
+					"children": [
+						{
+							"text": "产品管理",
+							"link": "/product"
+						},
+						{
+							"text": "询盘管理",
+							"link": "/product/inquery"
+						},
+						{
+							"text": "采购配对管理",
+							"link": "/product/purchase"
+						},
+						{
+							"text": "拼单宝",
+							"link": "/product/pindan"
+						}
+					]
+				},
+				{
+					"text": "运营管理",
+					"icon": "anticon-robot",
+					"children": [
+						{
+							"text": "邮件订阅列表",
+							"link": "/subscribe"
+						},
+						{
+							"text": "网站帮助说明",
+							"link": "/content"
+						},
+						{
+							"text": "活动管理",
+							"link": "/activity"
+						},
+						{
+							"text": "评论管理",
+							"link": "/comment"
+						},
+						{
+							"text": "站内公告",
+							"link": "/notice"
+						},
+						{
+							"text": "提现管理",
+							"link": "/transaction"
+						},
+						{
+							"text": "设置",
+							"link": "/setting"
+						}
+					]
+				}
+			]
+		}
+	]
+}

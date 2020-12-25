@@ -1,0 +1,89 @@
+<div class="modal-header">
+	<div class="modal-title">{{ data.record.title.zh }} - 精彩回放</div>
+</div>
+
+<div
+	nz-row
+	[nzType]="'flex'"
+	[nzJustify]="'space-between'"
+	[nzAlign]="'middle'"
+	class="mb-md"
+>
+	<div></div>
+	<div>
+		<button nz-button nzType="primary" (click)="openModal()">
+			<i nz-icon nzType="upload"></i>
+			<span>上 传</span>
+		</button>
+	</div>
+</div>
+<nz-row nzGutter="24">
+	<nz-col *ngFor="let item of list" nzSpan="4">
+		<div class="video-wrap">
+			<video
+				*ngIf="item.subtag == 'video'"
+				controls
+				[src]="item.url ? item.url : ''"
+				style="display: block;"
+			></video>
+			<img
+				*ngIf="item.subtag == 'image'"
+				[_src]="item.url ? item.url : ''"
+				error="assets/img/empty.png"
+				alt="image"
+			/>
+			<div *ngIf="item.is_recommend" nz-row class="recommend-mark">
+				推 荐
+			</div>
+			<div nz-row class="inline-buttons">
+				<div
+					*ngIf="!item.is_recommend"
+					nz-col
+					nzSpan="8"
+					(click)="changeRecommend(item.id, 1)"
+				>
+					推 荐
+				</div>
+				<div
+					*ngIf="item.is_recommend"
+					nz-col
+					nzSpan="8"
+					(click)="changeRecommend(item.id, 0)"
+				>
+					取消推荐
+				</div>
+				<div nz-col nzSpan="8" (click)="openModal(item)">
+					编 辑
+				</div>
+				<div
+					nz-col
+					nzSpan="8"
+					(click)="remove(item.id)"
+					style="background-color: rgba(255, 0, 0, 0.43);"
+				>
+					删 除
+				</div>
+			</div>
+		</div>
+		<div class="py-sm nobreak">
+			{{
+				item.description
+					? item.description.zh || item.description.en || '-'
+					: '-'
+			}}
+		</div>
+	</nz-col>
+</nz-row>
+<nz-pagination
+	[nzPageIndex]="1"
+	[nzTotal]="total"
+	[nzPageSize]="12"
+	[nzShowTotal]="totalTemplate"
+	[nzPageSizeOptions]="[6, 12, 18, 24]"
+	nzShowSizeChanger
+	nzShowQuickJumper
+	class="text-right mt-md"
+	(nzPageIndexChange)="pageIndexChange($event)"
+	(nzPageSizeChange)="pageSizeChange($event)"
+></nz-pagination>
+<ng-template #totalTemplate let-total> 共 {{ total }} 条 </ng-template>

@@ -1,0 +1,20 @@
+<div class="modal-header">
+	<div class="modal-title">
+		注册详情 -
+		{{
+			data.record.user?.company
+				? data.record.user.company.name.zh ||
+				  data.record.user.company.name.en
+				: '-'
+		}}
+	</div>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+</st>

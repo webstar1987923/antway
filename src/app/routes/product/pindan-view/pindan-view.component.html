@@ -1,0 +1,36 @@
+<div class="modal-header">
+	<div class="modal-title">拼单列表 - {{ data.record.name.zh || '-' }}</div>
+</div>
+
+<st
+	#st
+	[columns]="columns"
+	[data]="data.record.pindans"
+	[loading]="loading"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+	<ng-template st-row="status" let-i>
+		<nz-badge
+			[nzColor]="status[i.status].color"
+			[nzText]="status[i.status].label"
+		></nz-badge>
+	</ng-template>
+</st>
+
+<nz-modal
+	[(nzVisible)]="isOpenAddressModal"
+	nzTitle="拼单地址"
+	(nzOnCancel)="isOpenAddressModal = false"
+>
+	<sv-container size="small" col="1" gutter="0">
+		<sv label="电话">{{ selectedPindan.contact_phone || '-' }}</sv>
+		<sv label="手机">{{ selectedPindan.contact_mobile || '-' }}</sv>
+		<sv label="邮箱">{{ selectedPindan.contact_email || '-' }}</sv>
+	</sv-container>
+	<div *nzModalFooter>
+		<button nz-button nzType="primary" (click)="isOpenAddressModal = false">
+			确定
+		</button>
+	</div>
+</nz-modal>

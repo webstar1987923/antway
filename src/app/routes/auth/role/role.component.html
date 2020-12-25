@@ -1,0 +1,99 @@
+<div nz-row nzGutter="24" class="pt-lg">
+	<div nz-col nzFlex="280px">
+		<nz-card [nzBordered]="false" [nzTitle]="roleListHeader">
+			<ng-template #roleListHeader>
+				<div class="text-center">
+					<button
+						nz-button
+						(click)="openRoleModal()"
+						[nzType]="'primary'"
+						class="accent"
+					>
+						<i nz-icon nzType="plus"></i>
+						<span>添加角色</span>
+					</button>
+				</div>
+			</ng-template>
+			<div
+				*ngFor="let item of roles"
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				[class.bg-primary-light]="item.isActive"
+				[class.bg-primary]="item.id == selectedRole.id"
+				[class.text-white]="item.isActive || item.id == selectedRole.id"
+				class="p-sm point"
+				(click)="selectRole(item)"
+				(mouseenter)="item.isActive = true"
+				(mouseleave)="item.isActive = false"
+			>
+				<div nz-col>
+					<strong>{{ item.name }}</strong>
+				</div>
+				<div *ngIf="item.isActive" nz-row>
+					<i
+						nz-icon
+						nzType="edit"
+						class="pr-sm"
+						(click)="$event.stopPropagation(); openRoleModal(item)"
+					></i>
+					<i
+						nz-icon
+						nzType="delete"
+						(click)="$event.stopPropagation(); deleteRole(item)"
+					></i>
+				</div>
+			</div>
+		</nz-card>
+	</div>
+
+	<div *ngIf="selectedRole" nz-col nzFlex="auto">
+		<nz-card [nzBordered]="false">
+			<h3>
+				<strong>{{
+					selectedRole.name ? selectedRole.name : ''
+				}}</strong>
+			</h3>
+			<small class="text-sm text-grey font-weight-normal">
+				{{ selectedRole.description ? selectedRole.description : '' }}
+			</small>
+		</nz-card>
+
+		<nz-card [nzBordered]="false">
+			<div
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				class="mb-md"
+			>
+				<div>
+					<strong>所属员工列表</strong>
+				</div>
+				<button
+					nz-button
+					(click)="openStaffBinding()"
+					[nzType]="'primary'"
+				>
+					<span>修改员工</span>
+				</button>
+			</div>
+			<st
+				#st
+				[columns]="columns"
+				[data]="selectedRole.admins"
+				[loading]="loading"
+				[page]="{ showSize: true, showQuickJumper: true }"
+				(change)="stChange($event)"
+			>
+				<ng-template st-row="status" let-i>
+					<nz-badge
+						[nzColor]="status[i.status].color"
+						[nzText]="status[i.status].text"
+					></nz-badge>
+				</ng-template>
+			</st>
+		</nz-card>
+	</div>
+</div>

@@ -1,0 +1,157 @@
+<div class="page-header p-0"></div>
+<nz-card [nzBordered]="false">
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="name">产品名称</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.name"
+							name="name"
+							placeholder="请输入搜索产品名称"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="company_name">供应商</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.company_name"
+							name="company_name"
+							placeholder="请输入搜索负责人姓名"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="4">
+				<nz-form-item>
+					<nz-form-label nzFor="user_name">用户名</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.user_name"
+							name="user_name"
+							placeholder="搜索姓名"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="4">
+				<nz-form-item>
+					<nz-form-label nzFor="category_name">分类</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.category_name"
+							name="category_name"
+							placeholder="搜索分类"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="4" class="text-right">
+				<button nz-button type="submit" [nzType]="'primary'">
+					查询
+				</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="product" let-i>
+			<div class="product">
+				<img
+					[_src]="
+						i.images[0] && i.images[0].url ? i.images[0].url : ''
+					"
+					error="assets/img/empty.png"
+					alt="Avatar"
+				/>
+				<sv-container size="small" col="1" gutter="0">
+					<sv label="产品序号">{{ i.serial || '-' }}</sv>
+					<a
+						[attr.href]="
+							'http://www.antway.cn/product/detail/' + i.id
+						"
+						target="_blank"
+						class="nobreak"
+					>
+						{{ i.name?.zh }}
+					</a>
+					<sv label="产品分类">{{ i.category.name.zh || '-' }}</sv>
+				</sv-container>
+			</div>
+		</ng-template>
+		<ng-template st-row="result" let-i>
+			<div class="text-center">
+				<div
+					*ngIf="i.max_pindan"
+					[class.text-green]="
+						(i.pindans.length * 100) / i.max_pindan >= 70
+					"
+					[class.text-red]="
+						(i.pindans.length * 100) / i.max_pindan < 70 &&
+						(i.pindans.length * 100) / i.max_pindan >= 30
+					"
+					[class.text-grey]="
+						(i.pindans.length * 100) / i.max_pindan < 30 &&
+						(i.pindans.length * 100) / i.max_pindan >= 0
+					"
+				>
+					{{
+						i.pindans.length && i.max_pindan
+							? (i.pindans.length * 100) / i.max_pindan
+							: '0'
+					}}%
+				</div>
+				<div>
+					{{
+						(i.pindans.length || '0') + '/' + (i.max_pindan || '-')
+					}}
+				</div>
+				<div>{{ i.pindans.length ? i.pindans.length : '0' }}人拼单</div>
+			</div>
+		</ng-template>
+		<ng-template st-row="pindan_status" let-i>
+			<nz-badge
+				[nzColor]="pindanStatus[i.pindan_status].color"
+				[nzText]="pindanStatus[i.pindan_status].label"
+			></nz-badge>
+		</ng-template>
+		<ng-template st-row="supplier_link" let-i>
+			<a
+				*ngIf="i.company"
+				[attr.href]="
+					'http://www.antway.cn/company/home?id=' + i.company.id
+				"
+				target="_blank"
+			>
+				{{ i.company?.name?.zh || i.company?.name?.en || '-' }}
+			</a>
+			<br />
+			{{ i.user?.name?.zh || i.user?.name?.zh || '-' }}
+		</ng-template>
+	</st>
+</nz-card>

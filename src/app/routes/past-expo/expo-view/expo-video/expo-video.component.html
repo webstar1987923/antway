@@ -1,0 +1,26 @@
+<nz-progress *ngIf="uploadingVideo" [nzPercent]="percentDone"></nz-progress>
+<nz-upload
+	nzAccept="video/*"
+	nzFileType="video/mp4"
+	[(nzFileList)]="videoList"
+	[nzFileListRender]="uploadTpl"
+	[nzBeforeUpload]="beforeUploadZh"
+>
+	<div class="text-right">
+		<button nz-button>
+			<i nz-icon nzType="upload"></i>
+			<span>上 传</span>
+		</button>
+	</div>
+</nz-upload>
+
+<ng-template #uploadTpl let-list>
+	<nz-row [nzGutter]="24">
+		<nz-col *ngFor="let item of list">
+			<div class="logo-upload mt-md">
+				<video controls [src]="item.url ? item.url : ''"></video>
+				<div (click)="removeAsset(item)" class="delete">删 除</div>
+			</div>
+		</nz-col>
+	</nz-row>
+</ng-template>

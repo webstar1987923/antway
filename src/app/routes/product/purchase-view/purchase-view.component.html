@@ -1,0 +1,62 @@
+<div class="modal-header">
+	<div class="modal-title">采购详情</div>
+</div>
+
+<nz-row nzGutter="48" class="mb-sm">
+	<nz-col>
+		<h3>
+			<strong>
+				{{ data.record.title || '-' }}
+			</strong>
+			<nz-tag [nzColor]="data.record.urgent ? 'volcano' : 'cyan'">
+				{{ data.record.urgent ? '紧急采购' : '普通采购' }}
+			</nz-tag>
+		</h3>
+		<div class="mb-sm">
+			<span>产品分类:</span>
+			<span class="text-grey">
+				{{ data.record.category.name.zh || '' }}
+			</span>
+		</div>
+		<div>
+			<span>采购期限:</span>
+			<span class="text-grey mr-lg">
+				{{
+					(data.record.delivery_date | date: 'yyyy/MM/dd') ||
+						'----------'
+				}}
+			</span>
+			<span>采购数量:</span>
+			<span class="text-grey">
+				{{ data.record.quantity || '' }}
+				{{ data.record.unit.name.zh || '' }}
+			</span>
+		</div>
+	</nz-col>
+	<nz-col>
+		<nz-row [nzGutter]="24">
+			<nz-col
+				*ngFor="let image of data.record.assets"
+				class="purchase-image"
+			>
+				<img
+					[_src]="image.url ? image.url : ''"
+					error="assets/img/empty.png"
+					alt="product"
+				/>
+			</nz-col>
+		</nz-row>
+	</nz-col>
+</nz-row>
+<p>
+	{{ data.record.description.zh || data.record.description.en || '' }}
+</p>
+<st
+	#st
+	[columns]="columns"
+	[data]="data.record.offers"
+	[total]="data.record.offers.length"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+</st>

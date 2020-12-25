@@ -1,0 +1,12 @@
+<div class="modal-header">
+	<div class="modal-title">{{ data.record.title.zh }} - 评论</div>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+</st>

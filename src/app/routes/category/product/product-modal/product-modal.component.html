@@ -1,0 +1,75 @@
+<div class="modal-header">
+	<div class="modal-title">
+		{{ this.data.record.id == null ? '添加' : '修改' }}分类
+	</div>
+</div>
+<sf #sf mode="edit" [schema]="schema" [formData]="data.record" button="none">
+</sf>
+
+<se-container *ngIf="!data.record.pid" labelWidth="120">
+	<se label="图标" col="1" required>
+		<p class="text-grey">建议尺寸: 40px * 40px</p>
+		<nz-row nzJustify="space-between">
+			<nz-upload
+				nz-col
+				nzAccept="image/*"
+				[(nzFileList)]="imageList[0]"
+				[nzFileListRender]="imageTpl"
+				[nzBeforeUpload]="beforeUploadImage0"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">普通</span>
+			</nz-upload>
+			<nz-upload
+				nz-col
+				nzAccept="image/*"
+				[(nzFileList)]="imageList[1]"
+				[nzFileListRender]="imageTpl"
+				[nzBeforeUpload]="beforeUploadImage1"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">选择</span>
+			</nz-upload>
+		</nz-row>
+	</se>
+</se-container>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save(sf.value)"
+		[disabled]="!(sf.valid && iconUploaded())"
+	>
+		确 定
+	</button>
+</div>
+
+<ng-template #imageTpl let-list>
+	<div *ngFor="let item of list" class="image-upload mt-md bg-image">
+		<img
+			[_src]="item.url ? item.url : ''"
+			error="assets/img/empty.png"
+			alt="Avatar"
+		/>
+	</div>
+</ng-template>
+
+<nz-modal
+	[nzVisible]="previewImageVisible"
+	[nzContent]="modalImageContent"
+	[nzFooter]="null"
+	(nzOnCancel)="previewImageVisible = false"
+>
+	<ng-template #modalImageContent>
+		<img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+	</ng-template>
+</nz-modal>

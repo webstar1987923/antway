@@ -1,0 +1,29 @@
+<se-container col="1" labelWidth="120">
+	<se label="参观证" required>
+		<nz-row nzJustify="space-between">
+			<nz-upload
+				nz-col
+				nzAccept="image/*"
+				[(nzFileList)]="fileList[0]"
+				[nzFileListRender]="fileTpl"
+				[nzBeforeUpload]="beforeUploadFile"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md text-grey">建议尺寸: 430px * 345px</span>
+			</nz-upload>
+		</nz-row>
+	</se>
+</se-container>
+
+<ng-template #fileTpl let-list>
+	<div *ngFor="let item of list" class="file-upload mt-md">
+		<img
+			[_src]="item.url ? item.url : ''"
+			error="assets/img/empty.png"
+			alt="Avatar"
+		/>
+	</div>
+</ng-template>

@@ -1,0 +1,33 @@
+<div class="modal-header">
+	<div class="modal-title">
+		报名列表
+	</div>
+</div>
+<div
+	nz-row
+	[nzType]="'flex'"
+	nzJustify="end"
+	[nzAlign]="'middle'"
+	class="mb-md"
+>
+	<nz-col>
+		<button nz-button (click)="download()" nzType="default">
+			<span>下载报名名单</span>
+		</button>
+	</nz-col>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+	<ng-template st-row="status" let-i>
+		<nz-badge
+			[nzColor]="status[i.status].color"
+			[nzText]="status[i.status].label"
+		></nz-badge>
+	</ng-template>
+</st>

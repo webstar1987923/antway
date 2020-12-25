@@ -1,0 +1,50 @@
+<div
+	nz-row
+	[nzType]="'flex'"
+	[nzJustify]="'space-between'"
+	[nzAlign]="'middle'"
+	class="mb-md"
+>
+	<div>
+		<strong>{{ company.name.zh || '' }}</strong>
+	</div>
+	<div>
+		<button nz-button (click)="openUserModal()" [nzType]="'primary'">
+			<span>新增会员</span>
+		</button>
+		<button nz-button (click)="openMemberBinding()" [nzType]="'primary'">
+			<span>绑定会员</span>
+		</button>
+		<button nz-button nz-dropdown [nzDropdownMenu]="menuMore">
+			批量操作
+			<i nz-icon nzType="down"></i>
+		</button>
+		<nz-dropdown-menu #menuMore="nzDropdownMenu">
+			<ul nz-menu>
+				<li nz-menu-item (click)="openEmailModal()">发送邮件</li>
+			</ul>
+		</nz-dropdown-menu>
+	</div>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[loading]="loading"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+	<ng-template st-row="name" let-i>
+		{{ i.name.zh ? i.name.zh : '-' }}
+		<nz-tag *ngIf="i.id == i.company.user_id" [nzColor]="'blue'"
+			>负责人</nz-tag
+		>
+	</ng-template>
+	<ng-template st-row="status" let-i>
+		<nz-badge
+			[nzColor]="status[i.status].color"
+			[nzText]="status[i.status].text"
+		></nz-badge>
+	</ng-template>
+</st>

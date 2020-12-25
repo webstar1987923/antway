@@ -1,0 +1,19 @@
+<div class="alain-default__aside-inner">
+	<div class="sidebar-logo">
+		<a href="https://ng.ant.design/" target="_blank">
+			<img
+				*ngIf="!isCollapsed"
+				class="alain-default__header-logo-expanded"
+				src="./assets/logo-full.png"
+				style="max-height: 40px;"
+			/>
+			<img
+				*ngIf="isCollapsed"
+				class="alain-default__header-logo-collapsed"
+				src="./assets/logo.png"
+				style="max-height: 30px;"
+			/>
+		</a>
+	</div>
+	<sidebar-nav class="d-block py-lg"></sidebar-nav>
+</div>

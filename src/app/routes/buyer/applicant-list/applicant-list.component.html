@@ -1,0 +1,95 @@
+<nz-card [nzBordered]="false">
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="name">姓名</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.name"
+							name="name"
+							placeholder="请输入搜索姓名"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="phone">手机号</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.phone"
+							name="phone"
+							placeholder="请输入搜索手机号"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="email">邮箱</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.email"
+							name="email"
+							placeholder="请输入搜索邮箱"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6" class="text-right">
+				<button nz-button type="submit" [nzType]="'primary'">
+					查询
+				</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div></div>
+		<div>
+			<button nz-button (click)="download()">
+				<span>导出搜索结果</span>
+			</button>
+		</div>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.status]?.color"
+				[nzText]="status[i.status]?.label"
+			></nz-badge>
+		</ng-template>
+		<ng-template st-row="resultStatus" let-i>
+			<nz-badge
+				[nzColor]="resultStatus[i.is_visited].color"
+				[nzText]="resultStatus[i.is_visited].label"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

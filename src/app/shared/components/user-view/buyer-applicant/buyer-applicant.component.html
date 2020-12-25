@@ -1,0 +1,24 @@
+<nz-card [nzBordered]="false">
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[total]="total"
+		[loading]="loading"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.status].color"
+				[nzText]="status[i.status].label"
+			></nz-badge>
+		</ng-template>
+		<ng-template st-row="resultStatus" let-i>
+			<nz-badge
+				[nzColor]="resultStatus[i.is_visited].color"
+				[nzText]="resultStatus[i.is_visited].label"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

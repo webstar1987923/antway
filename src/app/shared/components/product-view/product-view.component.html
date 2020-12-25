@@ -1,0 +1,113 @@
+<div style="margin-bottom: 1rem;">
+	<nz-tabset (nzSelectedIndexChange)="selectTab($event)">
+		<nz-tab nzTitle="基础信息">
+			<ng-container *ngIf="false; else mainForm"></ng-container>
+		</nz-tab>
+		<nz-tab nzTitle="产品内容" [nzForceRender]="true">
+			<ng-container *ngIf="false; else descriptionForm"></ng-container>
+		</nz-tab>
+	</nz-tabset>
+</div>
+
+<ng-template #mainForm>
+	<h4><strong>产品信息</strong></h4>
+	<sf #sf [schema]="schema" compact button="none"> </sf>
+
+	<se-container labelWidth="140">
+		<se label="产品视频" col="2">
+			<nz-upload
+				nzListType="picture-card"
+				nzAccept="video/*"
+				nzFileType="video/mp4"
+				[(nzFileList)]="videoList"
+				[nzBeforeUpload]="beforeUploadVideo"
+				[nzRemove]="removeAsset"
+				[nzPreview]="handlePreviewVideo">
+				<i nz-icon nzType="plus"></i>
+				<div class="ant-upload-text">点击<br />上传视频</div>
+			</nz-upload>
+		</se>
+		<se label="产品图片" col="2" labelWidth="80">
+			<nz-upload
+				nzListType="picture-card"
+				nzAccept="image/*"
+				nzFileType="image/png,image/jpeg,image/gif,image/bmp"
+				[(nzFileList)]="imageList"
+				[nzBeforeUpload]="beforeUploadImage"
+				[nzRemove]="removeAsset"
+				[nzPreview]="handlePreviewImage">
+				<i nz-icon nzType="plus"></i>
+				<div class="ant-upload-text">点击<br />上传图片</div>
+			</nz-upload>
+		</se>
+	</se-container>
+
+	<h4><strong>其他信息</strong></h4>
+	<sv-container size="small" col="3" labelWidth="140">
+		<sv label="企业名称">{{
+			data.record.company?.name?.zh || data.record?.company?.name?.en || '-'
+			}}</sv>
+		<sv label="负责人">{{
+			data.record.company?.manager?.name?.zh ||
+			data.record.company?.manager?.name?.en ||
+			'-'
+			}}</sv>
+		<sv label="上传人">{{
+			data.record.user?.name?.zh || data.record.user?.name?.en || '-'
+			}}</sv>
+		<sv label="添加时间">{{
+			data.record.created_at | date: 'yyyy/MM/dd HH:mm:ss'
+			}}</sv>
+		<sv label="最后更新时间">{{
+			data.record.updated_at | date: 'yyyy/MM/dd HH:mm:ss'
+			}}</sv>
+	</sv-container>
+
+	<nz-modal
+		[nzVisible]="previewImageVisible"
+		[nzContent]="modalImageContent"
+		[nzFooter]="null"
+		(nzOnCancel)="previewImageVisible= false">
+		<ng-template #modalImageContent>
+			<img [src]="previewImage" [ngStyle]="{ width: '100%' }" />
+		</ng-template>
+	</nz-modal>
+
+	<nz-modal
+		[nzVisible]="previewVideoVisible"
+		[nzContent]="modalVideoContent"
+		[nzFooter]="null"
+		(nzOnCancel)="previewVideoVisible= false">
+		<ng-template #modalVideoContent>
+			<video
+				controls
+				autoplay
+				loop
+				[src]="previewVideo"
+				[ngStyle]="{ width: '100%' }"></video>
+		</ng-template>
+	</nz-modal>
+</ng-template>
+
+<ng-template #descriptionForm>
+	<nz-tabset [nzTabBarStyle]="{ 'margin-bottom': '0' }">
+		<nz-tab
+			*ngFor="let tab of descriptionTabs; let i= index"
+			[nzTitle]="tab"
+			[nzForceRender]="true">
+			<app-wang-editor [(content)]="descriptions[i]"></app-wang-editor>
+		</nz-tab>
+	</nz-tabset>
+</ng-template>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save()"
+		[disabled]="!isValidForm()">
+		确 定
+	</button>
+</div>

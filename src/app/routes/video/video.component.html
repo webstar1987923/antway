@@ -1,0 +1,135 @@
+<div class="page-header p-0"></div>
+<nz-card [nzBordered]="false">
+	<div class="mb-lg text-center">
+		<nz-radio-group
+			[(ngModel)]="queryParams.filter"
+			(ngModelChange)="getData()"
+		>
+			<label nz-radio-button nzValue=""><span>所 有</span></label>
+			<label nz-radio-button nzValue="is_recommend">
+				<span>推 荐</span>
+			</label>
+			<label nz-radio-button nzValue="company"><span>企 业</span></label>
+			<label nz-radio-button nzValue="expo"><span>展 会</span></label>
+			<label nz-radio-button nzValue="activity"><span>活 动</span></label>
+			<label nz-radio-button nzValue="extra"><span>其 他</span></label>
+		</nz-radio-group>
+	</div>
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="description">标题</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.description"
+							name="description"
+							placeholder="请输入搜索标题"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="18" class="text-right">
+				<button nz-button type="submit" nzType="primary">
+					查询
+				</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div></div>
+		<div>
+			<button nz-button nzType="primary" (click)="openModal()">
+				<i nz-icon nzType="upload"></i>
+				<span>上 传</span>
+			</button>
+		</div>
+	</div>
+	<nz-row nzGutter="24">
+		<nz-col *ngFor="let item of list" nzSpan="4">
+			<div class="video-wrap">
+				<video
+					*ngIf="item.subtag == 'video'"
+					controls
+					[src]="item.url ? item.url : ''"
+					style="display: block;"
+				></video>
+				<img
+					*ngIf="item.subtag == 'image'"
+					[_src]="item.url ? item.url : ''"
+					error="assets/img/empty.png"
+					alt="image"
+				/>
+				<div *ngIf="item.is_recommend" nz-row class="recommend-mark">
+					推 荐
+				</div>
+				<div nz-row class="inline-buttons">
+					<div
+						*ngIf="!item.is_recommend"
+						nz-col
+						nzSpan="8"
+						(click)="changeRecommend(item.id, 1)"
+					>
+						推 荐
+					</div>
+					<div
+						*ngIf="item.is_recommend"
+						nz-col
+						nzSpan="8"
+						(click)="changeRecommend(item.id, 0)"
+					>
+						取消推荐
+					</div>
+					<div nz-col nzSpan="8" (click)="openModal(item)">
+						编 辑
+					</div>
+					<div
+						nz-col
+						nzSpan="8"
+						(click)="remove(item.id)"
+						style="background-color: rgba(255, 0, 0, 0.43);"
+					>
+						删 除
+					</div>
+				</div>
+			</div>
+			<div class="py-sm nobreak">
+				{{
+					item.description
+						? item.description.zh || item.description.en || '-'
+						: '-'
+				}}
+			</div>
+		</nz-col>
+	</nz-row>
+	<nz-pagination
+		[nzPageIndex]="1"
+		[nzTotal]="total"
+		[nzPageSize]="12"
+		[nzShowTotal]="totalTemplate"
+		[nzPageSizeOptions]="[6, 12, 18, 24]"
+		nzShowSizeChanger
+		nzShowQuickJumper
+		class="text-right mt-md"
+		(nzPageIndexChange)="pageIndexChange($event)"
+		(nzPageSizeChange)="pageSizeChange($event)"
+	></nz-pagination>
+	<ng-template #totalTemplate let-total> 共 {{ total }} 条 </ng-template>
+</nz-card>

@@ -1,0 +1,28 @@
+<nz-card [nzBordered]="false">
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="discover_link" let-i>
+			<a
+				[attr.href]="
+					(i.discover?.tag === 'activity'
+						? 'http://www.antway.cn/activities/detail/'
+						: 'http://www.antway.cn/writer/article/') +
+					i.discover?.id
+				"
+				target="_blank"
+			>
+				{{
+					i.discover?.tag === 'activity'
+						? i.discover?.title.zh
+						: i.discover?.title || '-'
+				}}
+			</a>
+		</ng-template>
+	</st>
+</nz-card>

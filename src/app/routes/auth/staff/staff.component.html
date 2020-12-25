@@ -1,0 +1,89 @@
+<!-- <page-header [title]="'搜索列表'">
+</page-header> -->
+<div class="alain-default__content-title">
+	<h1>
+		员工管理
+	</h1>
+</div>
+<nz-card [nzBordered]="false">
+	<form nz-form [nzLayout]="'inline'" (ngSubmit)="getData()">
+		<div nz-col nzSm="8">
+			<nz-form-item>
+				<nz-form-label nzFor="user_name">账号</nz-form-label>
+				<nz-form-control>
+					<input
+						nz-input
+						[(ngModel)]="queryParams.user_name"
+						name="user_name"
+						placeholder="请输入搜索账号"
+						id="user_name"
+					/>
+				</nz-form-control>
+			</nz-form-item>
+		</div>
+		<div nz-col nzSpan="8">
+			<nz-form-item>
+				<nz-form-label nzFor="phone">手机号</nz-form-label>
+				<nz-form-control>
+					<input
+						nz-input
+						[(ngModel)]="queryParams.phone"
+						name="phone"
+						placeholder="请输入搜索手机号"
+						id="phone"
+					/>
+				</nz-form-control>
+			</nz-form-item>
+		</div>
+		<div nz-col nzSpan="8" class="text-right">
+			<button
+				nz-button
+				type="submit"
+				[nzType]="'primary'"
+				[nzLoading]="loading"
+			>
+				查询
+			</button>
+			<button nz-button type="reset" (click)="reset()" class="ml-sm">
+				重置
+			</button>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div>
+			<strong>员工列表</strong>
+		</div>
+		<div>
+			<button nz-button (click)="openStaffModal()" [nzType]="'primary'">
+				<span>添加员工</span>
+			</button>
+			<button nz-button (click)="remove()" [nzType]="'primary'" nzDanger>
+				<span>批量删除</span>
+			</button>
+		</div>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.status].color"
+				[nzText]="status[i.status].text"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

@@ -1,0 +1,387 @@
+<div
+	*ngIf="permissionModuleList && permissionModuleList.length"
+	nz-row
+	nzGutter="24"
+>
+	<div nz-col [nzSpan]="4">
+		<nz-card
+			[nzBordered]="true"
+			[nzTitle]="roleListHeader"
+			nzType="inner"
+			[nzBodyStyle]="{ 'background-color': '#F5F5F5' }"
+		>
+			<ng-template #roleListHeader>
+				<strong>系统模块</strong>
+			</ng-template>
+			<div
+				*ngFor="let item of permissionModuleList"
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				[class.bg-white]="item.id == selectedPermissionModule.id"
+				[class.text-primary]="
+					item.isActive || item.id == selectedPermissionModule.id
+				"
+				class="p-sm point"
+				style="border-radius: 5px;"
+				(click)="selectPermissionModule(item)"
+				(mouseenter)="item.isActive = true"
+				(mouseleave)="item.isActive = false"
+			>
+				<div nz-col>
+					<strong>{{ item.name }}</strong>
+				</div>
+			</div>
+		</nz-card>
+	</div>
+
+	<div *ngIf="selectedPermissionModule" nz-col [nzSpan]="20">
+		<nz-card class="bg-grey-lighter">
+			<h3>
+				<strong
+					>{{
+						selectedPermissionModule.name
+							? selectedPermissionModule.name
+							: ''
+					}}权限组设置</strong
+				>
+			</h3>
+			<small class="text-sm text-grey font-weight-normal">
+				添加权限组后在每个权限组与多个节点进行绑定。一个节点也可以在多个权限组重复绑定。
+			</small>
+		</nz-card>
+
+		<div nz-row nzGutter="24">
+			<div nz-col [nzSpan]="6">
+				<nz-card [nzBordered]="false" [nzTitle]="roleListHeader">
+					<ng-template #roleListHeader>
+						<div class="text-center">
+							<button
+								nz-button
+								(click)="openPermissionGroupModal()"
+								nzType="primary"
+								nzSize="small"
+								class="accent"
+							>
+								<span>添加权限组</span>
+							</button>
+							<button
+								nz-button
+								(click)="openPermissionModuleModal()"
+								nzSize="small"
+							>
+								<span>添加分组</span>
+							</button>
+						</div>
+					</ng-template>
+
+					<div
+						*ngFor="
+							let permissionGroup of selectedPermissionModule.permission_groups
+						"
+						nz-row
+						[nzType]="'flex'"
+						[nzJustify]="'space-between'"
+						[nzAlign]="'middle'"
+						[class.bg-primary-light]="permissionGroup.isActive"
+						[class.bg-primary]="
+							permissionGroup.id == selectedPermissionGroup.id
+						"
+						[class.text-white]="
+							permissionGroup.isActive ||
+							permissionGroup.id == selectedPermissionGroup.id
+						"
+						class="p-sm point"
+						(click)="selectPermissionGroup(permissionGroup)"
+						(mouseenter)="permissionGroup.isActive = true"
+						(mouseleave)="permissionGroup.isActive = false"
+					>
+						<div class="pl-md">
+							{{ permissionGroup.name }}
+						</div>
+						<div *ngIf="permissionGroup.isActive" nz-row>
+							<i
+								nz-icon
+								nzType="edit"
+								class="pr-sm"
+								(click)="
+									$event.stopPropagation();
+									openPermissionGroupModal(permissionGroup)
+								"
+							></i>
+							<i
+								nz-icon
+								nzType="delete"
+								(click)="
+									$event.stopPropagation();
+									removePermissionGroup(permissionGroup)
+								"
+							></i>
+						</div>
+					</div>
+
+					<ng-container
+						*ngFor="
+							let subPermissionModule of selectedPermissionModule.children
+						"
+					>
+						<div
+							nz-row
+							[nzType]="'flex'"
+							[nzJustify]="'space-between'"
+							[nzAlign]="'middle'"
+							[class.bg-primary-light]="
+								subPermissionModule.isActive
+							"
+							[class.text-white]="subPermissionModule.isActive"
+							class="p-sm point"
+							(mouseenter)="subPermissionModule.isActive = true"
+							(mouseleave)="subPermissionModule.isActive = false"
+						>
+							<div nz-col>
+								<strong>{{ subPermissionModule.name }}</strong>
+							</div>
+							<div *ngIf="subPermissionModule.isActive" nz-row>
+								<i
+									nz-icon
+									nzType="edit"
+									class="pr-sm"
+									(click)="
+										$event.stopPropagation();
+										openPermissionModuleModal(
+											subPermissionModule
+										)
+									"
+								></i>
+								<i
+									nz-icon
+									nzType="delete"
+									(click)="
+										$event.stopPropagation();
+										removePermissionModule(
+											subPermissionModule
+										)
+									"
+								></i>
+							</div>
+						</div>
+
+						<div
+							*ngFor="
+								let permissionGroup of subPermissionModule.permission_groups
+							"
+							nz-row
+							[nzType]="'flex'"
+							[nzJustify]="'space-between'"
+							[nzAlign]="'middle'"
+							[class.bg-primary-light]="permissionGroup.isActive"
+							[class.bg-primary]="
+								permissionGroup.id == selectedPermissionGroup.id
+							"
+							[class.text-white]="
+								permissionGroup.isActive ||
+								permissionGroup.id == selectedPermissionGroup.id
+							"
+							class="p-sm point"
+							(click)="selectPermissionGroup(permissionGroup)"
+							(mouseenter)="permissionGroup.isActive = true"
+							(mouseleave)="permissionGroup.isActive = false"
+						>
+							<div class="pl-md">
+								{{ permissionGroup.name }}
+							</div>
+							<div *ngIf="permissionGroup.isActive" nz-row>
+								<i
+									nz-icon
+									nzType="edit"
+									class="pr-sm"
+									(click)="
+										$event.stopPropagation();
+										openPermissionGroupModal(
+											permissionGroup
+										)
+									"
+								></i>
+								<i
+									nz-icon
+									nzType="delete"
+									(click)="
+										$event.stopPropagation();
+										removePermissionGroup(permissionGroup)
+									"
+								></i>
+							</div>
+						</div>
+					</ng-container>
+				</nz-card>
+			</div>
+
+			<div
+				*ngIf="selectedPermissionGroup.id; else noData"
+				nz-col
+				[nzSpan]="18"
+			>
+				<!-- Binded permissions to this permission group -->
+				<nz-card [nzBordered]="false" [nzTitle]="roleHeader">
+					<ng-template #roleHeader>
+						<div nz-row [nzAlign]="'middle'">
+							<strong class="mr-lg">
+								{{
+									selectedPermissionGroup.name
+										? selectedPermissionGroup.name
+										: ''
+								}}节点列表
+							</strong>
+							<small class="text-sm text-grey font-weight-normal">
+								点击标签取消节点绑定
+							</small>
+						</div>
+					</ng-template>
+
+					<nz-list [nzLoading]="loading">
+						<ng-container
+							*ngIf="
+								selectedPermissionGroup.permissions &&
+									selectedPermissionGroup.permissions.length;
+								else noData
+							"
+						>
+							<div style="min-height: 130px;">
+								<nz-tag
+									*ngFor="
+										let permission of selectedPermissionGroup.permissions
+									"
+									nzMode="closeable"
+									nzColor="processing"
+									(nzOnClose)="
+										preventDefault($event);
+										removePermission(permission)
+									"
+								>
+									{{ permission.name }}
+								</nz-tag>
+							</div>
+						</ng-container>
+					</nz-list>
+				</nz-card>
+
+				<!-- Binding available -->
+				<nz-card
+					[nzBordered]="false"
+					[nzTitle]="notBindedHeader"
+					class="mb-0"
+				>
+					<ng-template #notBindedHeader>
+						<div nz-row [nzAlign]="'middle'">
+							<strong class="mr-lg">未分配节点列表</strong>
+							<small class="text-sm text-grey font-weight-normal">
+								点击标签绑定节点
+							</small>
+						</div>
+					</ng-template>
+
+					<nz-list [nzLoading]="loading">
+						<ng-container
+							*ngIf="notBindedPermissions.length; else noData"
+						>
+							<div>
+								<nz-tag
+									*ngFor="
+										let permission of notBindedPermissions
+									"
+									(click)="
+										preventDefault($event);
+										addPermission(permission)
+									"
+								>
+									{{ permission.name }}
+								</nz-tag>
+							</div>
+						</ng-container>
+					</nz-list>
+				</nz-card>
+
+				<!-- Already binded to another permission group -->
+				<nz-card [nzBordered]="false" [nzTitle]="bindedHeader">
+					<ng-template #bindedHeader>
+						<div nz-row [nzAlign]="'middle'">
+							<strong class="mr-lg">已绑定节点列表</strong>
+							<small class="text-sm text-grey font-weight-normal">
+								以下节点已在别的权限组绑定。
+							</small>
+						</div>
+					</ng-template>
+					<nz-list [nzLoading]="loading">
+						<ng-container
+							*ngIf="bindedPermissions.length; else noData"
+						>
+							<div>
+								<div nz-row>
+									<div
+										*ngFor="
+											let permission of bindedPermissions
+										"
+										class="mr-sm"
+										style="
+											border: 1px solid #d9d9d9;
+											border-radius: 2px;
+										"
+										(click)="
+											preventDefault($event);
+											addPermission(permission)
+										"
+									>
+										<div
+											class="text-sm font-weight-normal"
+											style="
+												padding: 0 7px;
+												border-bottom: 1px solid #d9d9d9;
+											"
+										>
+											<span
+												*ngFor="
+													let permission_group of permission.permission_groups;
+													let i = index
+												"
+											>
+												{{ i ? ', ' : ''
+												}}{{ permission_group.name }}
+											</span>
+										</div>
+										<div
+											class="text-sm font-weight-bold"
+											style="
+												padding: 0 7px;
+												background-color: #f5f5f5;
+											"
+										>
+											{{ permission.name }}
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</nz-list>
+				</nz-card>
+				<div class="text-center">
+					<button
+						nz-button
+						[nzType]="'primary'"
+						[disabled]="!existChange()"
+						(click)="savePermissionGroup()"
+					>
+						<i nz-icon nzType="save"></i>
+						<span>保 存</span>
+					</button>
+				</div>
+			</div>
+
+			<ng-template #noData>
+				<div nz-col nzFlex="auto">
+					<nz-empty nzNotFoundImage="simple"></nz-empty>
+				</div>
+			</ng-template>
+		</div>
+	</div>
+</div>

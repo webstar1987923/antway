@@ -1,0 +1,19 @@
+<div class="modal-header">
+	<div class="modal-title">
+		{{ this.data.record.id == null ? '添加' : '修改' }}分类
+	</div>
+</div>
+<sf #sf mode="edit" [schema]="schema" button="none">
+	<div class="modal-footer">
+		<button nz-button type="button" (click)="close()">取 消</button>
+		<button
+			nz-button
+			type="submit"
+			[nzType]="'primary'"
+			(click)="save(sf.value)"
+			[disabled]="!sf.valid"
+		>
+			确 定
+		</button>
+	</div>
+</sf>

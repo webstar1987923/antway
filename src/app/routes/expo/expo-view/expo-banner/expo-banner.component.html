@@ -1,0 +1,93 @@
+<nz-tabset
+	nzTabPosition="left"
+	[(nzSelectedIndex)]="selectedTab"
+	(nzSelectedIndexChange)="selectTab($event)"
+	class="mt-sm"
+>
+	<nz-tab *ngFor="let tab of tabs" [nzTitle]="tab.name">
+		<p class="text-grey">{{ tab.description }}</p>
+		<nz-row nzGutter="24">
+			<nz-upload
+				nz-col
+				nzSpan="12"
+				nzAccept="image/*"
+				[(nzFileList)]="fileList[0]"
+				[nzFileListRender]="uploadTpl"
+				[nzBeforeUpload]="beforeUploadZh"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">PC端-中文</span>
+			</nz-upload>
+			<nz-upload
+				nz-col
+				nzSpan="12"
+				nzAccept="image/*"
+				[(nzFileList)]="fileList[1]"
+				[nzFileListRender]="uploadTpl"
+				[nzBeforeUpload]="beforeUploadEn"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">PC端-英文</span>
+			</nz-upload>
+		</nz-row>
+	</nz-tab>
+</nz-tabset>
+<div class="modal-footer mb-0 px-lg">
+	<button nz-button type="submit" [nzType]="'primary'" (click)="save()">
+		保 存
+	</button>
+</div>
+
+<ng-template #uploadTpl let-list>
+	<div nz-col nzJustify="space-between" *ngFor="let item of list">
+		<div nz-row nzJustify="space-between" class="logo-upload mt-md">
+			<img
+				[_src]="item.url ? item.url : ''"
+				error="assets/img/empty.png"
+				alt="Avatar"
+			/>
+			<div>
+				<div>
+					<button
+						nz-button
+						nzType="default"
+						(click)="moveAsset(item, 'up')"
+					>
+						<i nz-icon nzType="arrow-up"></i>
+					</button>
+				</div>
+				<div>
+					<button
+						nz-button
+						nzType="default"
+						(click)="moveAsset(item, 'down')"
+					>
+						<i nz-icon nzType="arrow-down"></i>
+					</button>
+				</div>
+				<div>
+					<button
+						nz-button
+						nzType="default"
+						nzDanger
+						(click)="removeAsset(item)"
+					>
+						<i nz-icon nzType="delete"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<input
+			nz-input
+			style="min-width: 88px"
+			[(ngModel)]="item.redirect_url"
+			[ngModelOptions]="{ standalone: true }"
+		/>
+	</div>
+</ng-template>

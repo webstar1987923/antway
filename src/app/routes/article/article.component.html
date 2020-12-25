@@ -1,0 +1,110 @@
+<div class="page-header p-0"></div>
+<nz-card [nzBordered]="false">
+	<div class="mb-lg text-center">
+		<nz-radio-group
+			[(ngModel)]="queryParams.lang"
+			(ngModelChange)="getData()">
+			<label nz-radio-button nzValue=""><span>所有</span></label>
+			<label nz-radio-button nzValue="zh"><span>中文</span></label>
+			<label nz-radio-button nzValue="en"><span>英文</span></label>
+		</nz-radio-group>
+	</div>
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form">
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="title">标题</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.title"
+							name="title"
+							placeholder="请输入搜索标题"
+							/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="user_name">作者</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.user_name"
+							name="user_name"
+							placeholder="请输入搜索作者"
+							/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="category">新闻分类</nz-form-label>
+					<nz-form-control>
+						<nz-select
+							[(ngModel)]="queryParams.category"
+							name="category"
+							id="category"
+							[nzPlaceHolder]="'请输入搜索新闻分类'"
+							[nzShowSearch]="true"
+							nzAllowClear>
+							<nz-option
+								*ngFor="let i of categories; let idx= index"
+								[nzLabel]="i.label"
+								[nzValue]="i.value">
+							</nz-option>
+						</nz-select>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6" class="text-right">
+				<button nz-button type="submit" nzType="primary">查询</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md">
+		<div></div>
+		<div>
+			<button nz-button nzType="primary" (click)="openModal()">
+				<span>发布头条</span>
+			</button>
+			<button nz-button (click)="remove()" [nzType]="'primary'" nzDanger>
+				<span>批量删除</span>
+			</button>
+		</div>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)">
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.status].color"
+				[nzText]="status[i.status].label"></nz-badge>
+		</ng-template>
+		<ng-template st-row="article_link" let-i>
+			<a
+				[attr.href]="'http://www.antway.cn/writer/article/' + i.id"
+				target="_blank">
+				{{ i.title || '-' }}</a>
+		</ng-template>
+	</st>
+</nz-card>

@@ -1,0 +1,835 @@
+<!-- General user tabs -->
+<nz-tabset
+	*ngIf="!data.isStationery"
+	(nzSelectedIndexChange)="selectTab($event)"
+	style="margin-bottom: -24px"
+>
+	<nz-tab nzTitle="基本资料">
+		<ng-container *ngIf="false; else main"></ng-container>
+	</nz-tab>
+	<nz-tab nzTitle="联络资料">
+		<app-contact-list
+			*ngIf="selectedTab == 1"
+			[user]="data.record"
+		></app-contact-list>
+	</nz-tab>
+	<nz-tab nzTitle="参观记录" [nzForceRender]="true">
+		<app-buyer-applicant
+			*ngIf="selectedTab == 2"
+			[user]="data.record"
+		></app-buyer-applicant>
+	</nz-tab>
+	<nz-tab nzTitle="流水明细">
+		<app-user-transaction
+			*ngIf="selectedTab == 3"
+			[user]="data.record"
+		></app-user-transaction>
+	</nz-tab>
+	<nz-tab nzTitle="专栏信息">
+		<app-writer-modal
+			*ngIf="selectedTab == 4"
+			[user_id]="data.record.id"
+		></app-writer-modal>
+	</nz-tab>
+</nz-tabset>
+<!-- Stationery use tabs -->
+<nz-tabset
+	*ngIf="data.isStationery"
+	(nzSelectedIndexChange)="selectTab($event)"
+	style="margin-bottom: -24px"
+>
+	<nz-tab nzTitle="公司资料">
+		<ng-container *ngIf="selectedTab != 0; else main"></ng-container
+	></nz-tab>
+	<nz-tab nzTitle="公司员工">
+		<app-member-list
+			*ngIf="selectedTab == 1"
+			[company]="data.record.company"
+		></app-member-list
+	></nz-tab>
+	<nz-tab nzTitle="参展记录">
+		<app-applicant-history
+			*ngIf="selectedTab == 2"
+			[company]="data.record.company"
+		></app-applicant-history
+	></nz-tab>
+</nz-tabset>
+
+<!-- Main form -->
+<ng-template #main>
+	<form nz-form #f="ngForm">
+		<!-- General user view -->
+		<ng-container *ngIf="data.isStationery">
+			<ng-container *ngIf="false; else companyTpl"></ng-container>
+			<ng-container *ngIf="false; else userTpl"></ng-container>
+		</ng-container>
+
+		<!-- Stationey user view -->
+		<ng-container *ngIf="!data.isStationery">
+			<ng-container *ngIf="false; else userTpl"></ng-container>
+			<ng-container *ngIf="false; else companyTpl"></ng-container>
+		</ng-container>
+	</form>
+
+	<div class="modal-footer mb-0 px-lg">
+		<button nz-button type="button" (click)="close()">取 消</button>
+		<button nz-button type="submit" [nzType]="'primary'" (click)="save()">
+			确 定
+		</button>
+	</div>
+</ng-template>
+
+<!-- Writer form -->
+<!-- <ng-template #writer>
+	<div class="m-md">
+		<a
+			*ngIf="data.record.writer?.id"
+			[routerLink]="'/article'"
+			[queryParams]="{ writer: data.record.writer.id }"
+		>
+			查看所有投稿
+		</a>
+	</div>
+	<sf #sf [schema]="schema" compact button="none">
+		<ng-template
+			sf-template="status"
+			let-me
+			let-ui="ui"
+			let-schema="schema"
+		>
+			<nz-tag [nzColor]="writerStatus[data.record.status_writer].color">
+				{{ writerStatus[data.record.status_writer].label }}
+			</nz-tag>
+		</ng-template>
+	</sf>
+
+	<div class="modal-footer mb-0 px-lg">
+		<button nz-button type="button" (click)="close()">取 消</button>
+		<button
+			nz-button
+			type="submit"
+			[nzType]="'primary'"
+			(click)="saveWriter(sf.value)"
+			[disabled]="!sf.valid"
+		>
+			确 定
+		</button>
+	</div>
+</ng-template> -->
+
+<!-- Personal information -->
+<ng-template #userTpl>
+	<div se-container size="compact" labelWidth="120">
+		<se-title>{{ data.isStationery ? '负责人信息' : '个人信息' }}</se-title>
+		<div nz-row style="flex-flow: row" class="py-1">
+			<div nz-col nzFlex="66px" class="avatar">
+				<img
+					[_src]="data.record.avatar?.url || ''"
+					error="assets/img/user.svg"
+					alt="Avatar"
+				/>
+			</div>
+			<se-container size="compact">
+				<se [label]="name_zh_label" col="3" labelWidth="100">
+					<ng-template #name_zh_label>
+						<span class="text-grey">中文&nbsp;&nbsp;</span>姓名
+					</ng-template>
+					<input
+						type="text"
+						nz-input
+						nzSize="small"
+						[(ngModel)]="user.name.zh"
+						name="name_zh"
+						required
+					/>
+				</se>
+				<se label="称呼" col="3" labelWidth="60">
+					<nz-radio-group
+						nzSize="small"
+						[(ngModel)]="user.gender"
+						name="gender"
+						required
+					>
+						<label
+							*ngFor="let i of gender.zh"
+							nz-radio
+							[nzValue]="i.value"
+							>{{ i.label }}</label
+						>
+					</nz-radio-group>
+				</se>
+				<se label="职务" col="3" labelWidth="100">
+					<input
+						type="text"
+						nz-input
+						nzSize="small"
+						[(ngModel)]="user.position.zh"
+						name="position_zh"
+						required
+					/>
+				</se>
+
+				<se [label]="name_en_label" col="3" labelWidth="100">
+					<ng-template #name_en_label>
+						<span class="text-grey">英文&nbsp;&nbsp;</span>姓名
+					</ng-template>
+					<input
+						type="text"
+						nz-input
+						nzSize="small"
+						[(ngModel)]="user.name.en"
+						name="name_en"
+						required
+					/>
+				</se>
+				<se label="称呼" col="3" labelWidth="60">
+					<nz-radio-group
+						nzSize="small"
+						[(ngModel)]="user.gender"
+						name="gender"
+						required
+					>
+						<label
+							*ngFor="let i of gender.en"
+							nz-radio
+							[nzValue]="i.value"
+							>{{ i.label }}</label
+						>
+					</nz-radio-group>
+				</se>
+				<se label="职务" col="3" labelWidth="100">
+					<input
+						type="text"
+						nz-input
+						nzSize="small"
+						[(ngModel)]="user.position.en"
+						name="position_en"
+						required
+					/>
+				</se>
+			</se-container>
+		</div>
+
+		<se label="手机" [error]="{ required: '请填写' }">
+			<nz-row [nzType]="'flex'" [nzAlign]="'middle'">
+				<nz-col>
+					<nz-input-group nzSize="small" [hidden]="!editPhone">
+						<input
+							type="text"
+							nz-input
+							nzSize="small"
+							[(ngModel)]="user.phone_prefix"
+							name="company_phone_0"
+							style="width: 20%"
+						/>
+						<input
+							type="text"
+							nz-input
+							[(ngModel)]="user.phone"
+							name="phone"
+							required
+							style="width: 80%"
+						/>
+					</nz-input-group>
+				</nz-col>
+				<span *ngIf="!editPhone" class=""
+					>{{ user.phone_prefix || '-' }}{{ user.phone || '-' }}</span
+				>
+				<a
+					*ngIf="!editPhone"
+					class="ml-sm"
+					(click)="
+						editPhone = !editPhone;
+						user.phone = data.record.phone;
+						user.phone_prefix = data.record.phone_prefix
+					"
+				>
+					修改
+				</a>
+				<a
+					*ngIf="editPhone"
+					class="ml-sm"
+					(click)="
+						editPhone = !editPhone;
+						user.phone = data.record.phone;
+						user.phone_prefix = data.record.phone_prefix
+					"
+				>
+					收起
+				</a>
+				<a
+					*ngIf="editPhone"
+					class="ml-sm"
+					(click)="editPhone = !editPhone; savePhone()"
+				>
+					保存
+				</a>
+			</nz-row>
+		</se>
+		<se label="邮箱地址">
+			<nz-row [nzType]="'flex'" [nzAlign]="'middle'">
+				<nz-form-control nzSpan="auto" [hidden]="!editEmail">
+					<input
+						type="text"
+						nz-input
+						nzSize="small"
+						[(ngModel)]="user.email"
+						name="email"
+						required
+					/>
+				</nz-form-control>
+				<span *ngIf="!editEmail">{{ user.email || '-' }}</span>
+				<a
+					*ngIf="!editEmail"
+					class="ml-sm"
+					(click)="
+						editEmail = !editEmail; user.email = data.record.email
+					"
+				>
+					修改
+				</a>
+				<a
+					*ngIf="editEmail"
+					class="ml-sm"
+					(click)="
+						editEmail = !editEmail; user.email = data.record.email
+					"
+				>
+					收起
+				</a>
+				<a
+					*ngIf="editEmail"
+					class="ml-sm"
+					(click)="editEmail = !editEmail; saveEmail()"
+				>
+					保存
+				</a>
+			</nz-row>
+		</se>
+		<se label="微信" col="2">
+			<input
+				type="text"
+				nz-input
+				nzSize="small"
+				[(ngModel)]="user.wechat"
+				name="wechat"
+			/>
+		</se>
+		<se label="QQ" col="2">
+			<input
+				type="text"
+				nz-input
+				nzSize="small"
+				[(ngModel)]="user.qq"
+				name="qq"
+			/>
+		</se>
+		<se label="会员认证" col="3">
+			<nz-row [nzType]="'flex'" [nzAlign]="'middle'">
+				<nz-tag
+					*ngIf="
+						isValidVip(company.stationerylog);
+						else notStationery
+					"
+					[nzColor]="'#f50'"
+				>
+					文具通会员
+				</nz-tag>
+				<ng-template #notStationery>
+					<nz-tag *ngIf="isValidVip(user.viplog)" [nzColor]="'#f50'">
+						VIP会员
+					</nz-tag>
+				</ng-template>
+				<ng-container *ngIf="user.status_verified != 2">
+					<nz-tag>未认证</nz-tag>
+					<a (click)="saveVerifyStatus(2, true)"> 认证 </a>
+				</ng-container>
+				<ng-container *ngIf="user.status_verified == 2">
+					<nz-tag [nzColor]="'green'">已认证</nz-tag>
+					<a (click)="saveVerifyStatus(0)"> 取消认证 </a>
+				</ng-container>
+			</nz-row>
+		</se>
+		<se label="VIP到期时间" col="3">
+			<nz-row [nzType]="'flex'" [nzAlign]="'middle'">
+				<nz-form-control nzSpan="auto" [hidden]="!editVipTodate">
+					<nz-date-picker
+						nzSize="small"
+						[(ngModel)]="user.viplog.todate"
+						name="vip_todate"
+					></nz-date-picker>
+				</nz-form-control>
+				<span *ngIf="!editVipTodate" class="">{{
+					user.viplog.todate | date: 'yyyy/MM/dd'
+				}}</span>
+				<a
+					*ngIf="!editVipTodate"
+					class="ml-sm"
+					(click)="
+						editVipTodate = !editVipTodate;
+						user.viplog.todate = data.record.viplog?.todate || null
+					"
+				>
+					修改
+				</a>
+				<a
+					*ngIf="editVipTodate"
+					class="ml-sm"
+					(click)="
+						editVipTodate = !editVipTodate;
+						user.viplog.todate = data.record.viplog?.todate || null
+					"
+				>
+					收起
+				</a>
+				<a
+					*ngIf="editVipTodate"
+					class="ml-sm"
+					(click)="editVipTodate = !editVipTodate; saveVip()"
+				>
+					保存
+				</a>
+				<ng-container *ngIf="user.viplog">
+					<a
+						*ngIf="
+							user.viplog.status === 1 || user.viplog.status === 2
+						"
+						class="ml-sm"
+						(click)="saveVipStatus(3)"
+					>
+						不通过
+					</a>
+					<a
+						*ngIf="
+							user.viplog.status === 1 || user.viplog.status === 3
+						"
+						class="ml-sm"
+						(click)="saveVipStatus(2)"
+					>
+						通过
+					</a>
+				</ng-container>
+				<ng-container *ngIf="user.viplog.transaction?.id; else notPaid">
+					<nz-tag nzColor="#52C41A" class="ml-sm"> 已支付 </nz-tag>
+					<a (click)="openUserTransaction(user)">
+						{{
+							currencyType[
+								user.viplog.transaction.payment_currency
+							]
+						}}
+						{{ user.viplog.transaction.payment_amount }}</a
+					>
+					<span
+						>&nbsp;{{
+							user.viplog.transaction.processed_at
+								| date: 'yyyy/MM/dd hh:mm:ss'
+						}}</span
+					>
+				</ng-container>
+				<ng-template #notPaid>
+					<nz-tag nzColor="grey" class="ml-sm"> 未支付 </nz-tag>
+				</ng-template>
+			</nz-row>
+		</se>
+		<se label="作者认证" col="3">
+			<nz-row [nzType]="'flex'" [nzAlign]="'middle'">
+				<ng-container *ngIf="user.status_writer != 2">
+					<nz-tag>未认证</nz-tag>
+					<a (click)="saveWriterStatus(2, true)"> 认证 </a>
+				</ng-container>
+				<ng-container *ngIf="user.status_writer == 2">
+					<nz-tag [nzColor]="'green'">已认证</nz-tag>
+					<a (click)="saveWriterStatus(0)"> 取消认证 </a>
+				</ng-container>
+			</nz-row>
+		</se>
+		<se label="参观次数" col="3">
+			<span>6次</span>
+		</se>
+		<se label="最后登录时间" col="3">
+			<span>{{
+				user.last_login_time | date: 'yyyy/MM/dd HH:mm:ss'
+			}}</span>
+		</se>
+		<se label="登录次数" col="3">
+			<span>6次</span>
+		</se>
+	</div>
+</ng-template>
+
+<!-- Company information -->
+<ng-template #companyTpl>
+	<div se-container size="compact" labelWidth="120">
+		<se-title>公司信息</se-title>
+
+		<se [label]="company_name_zh_label" col="3" labelWidth="120">
+			<ng-template #company_name_zh_label>
+				<span class="text-grey">中文&nbsp;&nbsp;</span>公司名称
+			</ng-template>
+			<input
+				type="text"
+				nz-input
+				nzSize="small"
+				[(ngModel)]="company.name.zh"
+				name="company_name_zh"
+				required
+			/>
+		</se>
+		<se label="详细地址" col="1" class="two-third">
+			<input
+				type="text"
+				nz-input
+				nzSize="small"
+				[(ngModel)]="company.address.zh"
+				name="company_position_zh"
+				required
+			/>
+		</se>
+
+		<se [label]="company_name_en_label" col="3" labelWidth="120">
+			<ng-template #company_name_en_label>
+				<span class="text-grey">英文&nbsp;&nbsp;</span>公司名称
+			</ng-template>
+			<input
+				type="text"
+				nz-input
+				nzSize="small"
+				[(ngModel)]="company.name.en"
+				name="company_name_en"
+				required
+			/>
+		</se>
+		<se label="详细地址" col="1" class="two-third">
+			<input
+				type="text"
+				nz-input
+				nzSize="small"
+				[(ngModel)]="company.address.en"
+				name="company_position_en"
+				required
+			/>
+		</se>
+		<se label="座机" col="3">
+			<app-phone-editor [(content)]="company.phone"></app-phone-editor>
+		</se>
+		<se label="传真" col="3">
+			<app-phone-editor [(content)]="company.fax"></app-phone-editor>
+		</se>
+		<se label="负责人" col="3">
+			<span>{{
+				company.manager
+					? company.manager.name.zh + ', ' + company.manager.name.en
+					: '-'
+			}}</span>
+		</se>
+		<se label="国家地区" col="3">
+			<nz-input-group nzSize="small" nzCompact>
+				<nz-select
+					nzSize="small"
+					[(ngModel)]="company.country_code"
+					name="company_country_code"
+					[style.width]="
+						company.country_code === 'CHN' ? '30%' : '100%'
+					"
+					(ngModelChange)="
+						company.region_id = null;
+						company.city_id = null;
+						selectCountry()
+					"
+					required
+				>
+					<nz-option
+						*ngFor="let i of countries; let idx = index"
+						[nzLabel]="i.name"
+						[nzValue]="i.code"
+					>
+					</nz-option>
+				</nz-select>
+				<nz-select
+					*ngIf="company.country_code === 'CHN'"
+					nzSize="small"
+					[(ngModel)]="company.region_id"
+					name="company_region_id"
+					style="width: 35%"
+					(ngModelChange)="company.city_id = null; selectRegion()"
+					required
+				>
+					<nz-option
+						*ngFor="let i of regions; let idx = index"
+						[nzLabel]="i.name"
+						[nzValue]="i.id"
+					>
+					</nz-option>
+				</nz-select>
+				<nz-select
+					*ngIf="company.country_code === 'CHN'"
+					nzSize="small"
+					[(ngModel)]="company.city_id"
+					name="company_city_id"
+					style="width: 35%"
+					required
+				>
+					<nz-option
+						*ngFor="let i of cities; let idx = index"
+						[nzLabel]="i.name"
+						[nzValue]="i.id"
+					>
+					</nz-option>
+				</nz-select>
+			</nz-input-group>
+		</se>
+		<se label="邮编" col="3">
+			<input
+				type="text"
+				nz-input
+				nzSize="small"
+				[(ngModel)]="company.postal"
+				name="company_postal"
+			/>
+		</se>
+		<se label="经营性质" col="3">
+			<nz-select
+				nzSize="small"
+				[(ngModel)]="company.mgmodel_id"
+				name="company_mgmodel"
+			>
+				<nz-option
+					*ngFor="let i of mgmodels; let idx = index"
+					[nzLabel]="i.name.zh"
+					[nzValue]="i.id"
+				>
+				</nz-option>
+			</nz-select>
+		</se>
+		<se label="二级域名" col="1" class="two-third">
+			<nz-input-group
+				nzSize="small"
+				nzAddOnBefore="https://"
+				[nzAddOnAfter]="secondDomainButton"
+			>
+				<input
+					type="text"
+					nz-input
+					[(ngModel)]="company.second_domain"
+					name="company_second_domain"
+					style="width: 60%; text-align: center"
+				/>
+				<input
+					type="text"
+					disabled
+					nz-input
+					placeholder=".web.antway.cn"
+					style="
+						width: 40%;
+						border-left: 0px;
+						pointer-events: none;
+						text-align: center;
+						background-color: rgb(255, 255, 255);
+					"
+				/>
+			</nz-input-group>
+			<ng-template #secondDomainButton>
+				<a
+					[href]="
+						'https://' + company.second_domain + '.web.antway.cn'
+					"
+					target="_blank"
+					>预览</a
+				>
+			</ng-template>
+		</se>
+		<se label="公司网址" col="3" class="two-third">
+			<nz-input-group nzSize="small" [nzAddOnAfter]="websiteButton">
+				<input
+					type="text"
+					nz-input
+					nzSize="small"
+					[(ngModel)]="company.website"
+					name="company_website"
+				/>
+			</nz-input-group>
+			<ng-template #websiteButton>
+				<a [href]="company.website" target="_blank">查看</a>
+			</ng-template>
+		</se>
+		<se label="企业认证" col="3">
+			<ng-container
+				*ngIf="company.status != CompanyStatusCst.COMPANY_VERIFIED"
+			>
+				<nz-tag>未认证</nz-tag>
+				<a
+					(click)="
+						saveCompanyVerifyStatus(
+							CompanyStatusCst.COMPANY_VERIFIED,
+							true
+						)
+					"
+				>
+					认证
+				</a>
+			</ng-container>
+			<ng-container
+				*ngIf="company.status == CompanyStatusCst.COMPANY_VERIFIED"
+			>
+				<nz-tag [nzColor]="'green'">已认证</nz-tag>
+				<a
+					(click)="
+						saveCompanyVerifyStatus(
+							CompanyStatusCst.COMPANY_NOT_VERIFIED
+						)
+					"
+				>
+					取消认证
+				</a>
+			</ng-container>
+		</se>
+		<se label="文具通到期时间" col="1" class="two-third" labelWidth="120">
+			<nz-row [nzType]="'flex'" [nzAlign]="'middle'">
+				<nz-form-control nzSpan="auto" [hidden]="!editStationeryTodate">
+					<nz-date-picker
+						nzSize="small"
+						[(ngModel)]="company.stationerylog.todate"
+						name="stationery_todate"
+					></nz-date-picker>
+				</nz-form-control>
+				<span *ngIf="!editStationeryTodate" class="">
+					{{ company.stationerylog.todate | date: 'yyyy/MM/dd' }}
+				</span>
+				<a
+					*ngIf="!editStationeryTodate"
+					class="ml-sm"
+					(click)="
+						editStationeryTodate = !editStationeryTodate;
+						company.stationerylog.todate =
+							data.record.company.stationerylog?.todate || null
+					"
+				>
+					修改
+				</a>
+				<a
+					*ngIf="editStationeryTodate"
+					class="ml-sm"
+					(click)="
+						editStationeryTodate = !editStationeryTodate;
+						company.stationerylog.todate =
+							data.record.company.stationerylog?.todate || null
+					"
+				>
+					收起
+				</a>
+				<a
+					*ngIf="editStationeryTodate"
+					class="ml-sm"
+					(click)="
+						editStationeryTodate = !editStationeryTodate;
+						saveStationery()
+					"
+				>
+					保存
+				</a>
+				<ng-container *ngIf="company.stationerylog">
+					<a
+						*ngIf="
+							company.stationerylog.status === 1 ||
+							company.stationerylog.status === 2
+						"
+						class="ml-sm"
+						(click)="saveStationeryStatus(3)"
+					>
+						不通过
+					</a>
+					<a
+						*ngIf="
+							company.stationerylog.status === 1 ||
+							company.stationerylog.status === 3
+						"
+						class="ml-sm"
+						(click)="saveStationeryStatus(2)"
+					>
+						通过
+					</a>
+				</ng-container>
+				<ng-container
+					*ngIf="company.stationerylog.transaction?.id; else notPaid"
+				>
+					<nz-tag nzColor="#52C41A" class="ml-sm"> 已支付 </nz-tag>
+					<a (click)="openUserTransaction(user)">
+						{{
+							currencyType[
+								company.stationerylog.transaction
+									.payment_currency
+							]
+						}}
+						{{
+							company.stationerylog.transaction.payment_amount
+						}}</a
+					>
+					<span
+						>&nbsp;{{
+							company.stationerylog.transaction.processed_at
+								| date: 'yyyy/MM/dd hh:mm:ss'
+						}}</span
+					>
+				</ng-container>
+				<ng-template #notPaid>
+					<nz-tag nzColor="grey" class="ml-sm"> 未支付 </nz-tag>
+				</ng-template>
+			</nz-row>
+		</se>
+		<se label="会员限制" col="3">
+			<nz-row [nzType]="'flex'" [nzAlign]="'middle'">
+				<nz-form-control
+					nzSpan="auto"
+					[hidden]="!editStationeryMembers"
+				>
+					<input
+						type="text"
+						nz-input
+						nzSize="small"
+						[(ngModel)]="company.stationery_members"
+						name="stationery_members"
+						required
+					/>
+				</nz-form-control>
+				<span *ngIf="!editStationeryMembers">
+					{{ company.stationery_members || '-' }}
+				</span>
+				<a
+					*ngIf="!editStationeryMembers"
+					class="ml-sm"
+					(click)="
+						editStationeryMembers = !editStationeryMembers;
+						company.stationery_members =
+							data.record.company.stationery_members
+					"
+				>
+					修改
+				</a>
+				<a
+					*ngIf="editStationeryMembers"
+					class="ml-sm"
+					(click)="
+						editStationeryMembers = !editStationeryMembers;
+						company.stationery_members =
+							data.record.company.stationery_members
+					"
+				>
+					收起
+				</a>
+				<a
+					*ngIf="editStationeryMembers"
+					class="ml-sm"
+					(click)="
+						editStationeryMembers = !editStationeryMembers;
+						saveStationeryMembers()
+					"
+				>
+					保存
+				</a>
+			</nz-row>
+		</se>
+		<se label="参展次数" col="3">
+			<span>{{ company.count_expos }}次</span>
+		</se>
+	</div>
+</ng-template>

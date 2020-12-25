@@ -1,0 +1,89 @@
+<div nz-row nzGutter="24" class="pt-lg">
+	<div nz-col [nzSpan]="6">
+		<nz-card [nzBordered]="false" [nzTitle]="roleListHeader">
+			<ng-template #roleListHeader>
+				<div class="text-center">
+					<button
+						nz-button
+						(click)="openTeamModal()"
+						[nzType]="'primary'"
+						class="accent"
+					>
+						<i nz-icon nzType="plus"></i>
+						<span>添加部门</span>
+					</button>
+				</div>
+			</ng-template>
+			<nz-tree
+				[nzData]="teams"
+				nzBlockNode
+				nzShowLine
+				(nzClick)="selectTeam($event)"
+			>
+			</nz-tree>
+		</nz-card>
+	</div>
+
+	<div *ngIf="selectedTeam" nz-col [nzSpan]="18">
+		<nz-card [nzBordered]="false">
+			<h3>
+				<strong>{{
+					selectedTeam.name ? selectedTeam.name : ''
+				}}</strong>
+			</h3>
+		</nz-card>
+
+		<nz-card [nzBordered]="false">
+			<div
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				class="mb-md"
+			>
+				<div>
+					<strong>部门人员</strong>
+				</div>
+				<div *ngIf="selectedTeam.id">
+					<button
+						nz-button
+						(click)="deleteTeam(selectedTeam.id)"
+						[nzType]="'default'"
+						nzDanger
+					>
+						<span>删除部门</span>
+					</button>
+					<button
+						nz-button
+						(click)="openTeamModal(selectedTeam)"
+						[nzType]="'default'"
+					>
+						<span>部门设置</span>
+					</button>
+					<button
+						nz-button
+						(click)="openTeamBinding()"
+						[nzType]="'primary'"
+					>
+						<span>添加部门员工</span>
+					</button>
+				</div>
+			</div>
+			<st
+				#st
+				[columns]="columns"
+				[data]="selectedTeam.admins"
+				[loading]="loading"
+				[page]="{ showSize: true, showQuickJumper: true }"
+				(change)="stChange($event)"
+			>
+				<ng-template st-row="status" let-i>
+					<nz-badge
+						[nzColor]="status[i.status].color"
+						[nzText]="status[i.status].text"
+					></nz-badge>
+				</ng-template>
+			</st>
+		</nz-card>
+	</div>
+</div>

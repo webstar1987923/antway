@@ -1,0 +1,103 @@
+<div class="modal-header">
+	<div class="modal-title">
+		{{ this.data.record.id == null ? '添加' : '修改' }}活动
+	</div>
+</div>
+<sf #sf mode="edit" [schema]="schema" [compact]="true" button="none">
+	<ng-template sf-template="image" let-me let-ui="ui" let-schema="schema">
+		<nz-upload
+			nz-col
+			nzAccept="image/*"
+			[(nzFileList)]="fileList[0]"
+			[nzFileListRender]="imageTpl"
+			[nzBeforeUpload]="beforeUploadImage"
+		>
+			<button nz-button>
+				<i nz-icon nzType="upload"></i>
+				<span>上 传</span>
+			</button>
+		</nz-upload>
+	</ng-template>
+	<ng-template sf-template="attach" let-me let-ui="ui" let-schema="schema">
+		<nz-row>
+			<nz-upload
+				nz-col
+				nzAccept=".zip"
+				[(nzFileList)]="fileList[1]"
+				[nzFileListRender]="fileTpl"
+				[nzBeforeUpload]="beforeUploadFile"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>请选择文件</span>
+				</button>
+			</nz-upload>
+		</nz-row>
+	</ng-template>
+	<ng-template sf-template="content" let-me let-ui="ui" let-schema="schema">
+		<nz-tabset [nzTabBarStyle]="{ 'margin-bottom': '0' }">
+			<nz-tab
+				*ngFor="let tab of contentTabs; let i = index"
+				[nzTitle]="tab"
+				[nzForceRender]="true"
+			>
+				<div style="min-height: 334px;">
+					<app-wang-editor
+						[(content)]="contents[i]"
+					></app-wang-editor>
+				</div>
+			</nz-tab>
+		</nz-tabset>
+	</ng-template>
+</sf>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save(sf.value)"
+		[disabled]="!sf.valid"
+	>
+		确 定
+	</button>
+</div>
+
+<ng-template #imageTpl let-list>
+	<nz-row nzGutter="24">
+		<nz-col *ngFor="let item of list" class="mt-sm">
+			<div nz-row nzAlign="middle" class="media-wrap">
+				<img
+					[_src]="item.url ? item.url : ''"
+					error="assets/img/empty.png"
+					alt="Avatar"
+				/>
+				<div nz-row class="inline-buttons">
+					<div
+						nz-col
+						nzSpan="24"
+						(click)="removeAsset(item)"
+						style="background-color: rgba(255, 0, 0, 0.43);"
+					>
+						删 除
+					</div>
+				</div>
+			</div>
+		</nz-col>
+	</nz-row>
+</ng-template>
+
+<ng-template #fileTpl let-list>
+	<div nz-row nzAlign="middle" *ngFor="let item of list" class="mt-sm">
+		<div>
+			<span><i nz-icon nzType="paper-clip" nzTheme="outline"></i></span>
+			<span>
+				{{ item.name }}
+			</span>
+			<span (click)="removeAsset(item)" class="pointer">
+				<i nz-icon nzType="delete" nzTheme="outline"></i>
+			</span>
+		</div>
+	</div>
+</ng-template>

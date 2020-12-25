@@ -1,0 +1,37 @@
+<div class="modal-header">
+	<div class="modal-title">{{ data.record.id ? '修改' : '新增' }}班次</div>
+</div>
+<sf #sf mode="edit" [schema]="schema" button="none">
+	<se-container labelWidth="150">
+		<se label="日期" col="1" required>
+			<div *ngFor="let dddd of dates; let i = index">
+				<nz-date-picker [(ngModel)]="dates[i]"></nz-date-picker>
+				<button
+					nz-button
+					nzType="default"
+					nzShape="circle"
+					(click)="removeDate(i)"
+					class="ml-sm"
+				>
+					<i nz-icon nzType="delete"></i>
+				</button>
+			</div>
+			<button nz-button (click)="addDate()" class="mt-sm">
+				<span>添加</span>
+			</button>
+		</se>
+	</se-container>
+	<div class="modal-footer">
+		<button nz-button type="button" (click)="close()">取 消</button>
+		<button
+			nz-button
+			type="submit"
+			[nzType]="'primary'"
+			[nzLoading]="loading"
+			(click)="save(sf.value)"
+			[disabled]="!sf.valid"
+		>
+			确 定
+		</button>
+	</div>
+</sf>

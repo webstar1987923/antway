@@ -1,0 +1,79 @@
+<se-container col="1" labelWidth="120">
+	<se label="展会Logo" required>
+		<nz-row nzJustify="space-between">
+			<nz-upload
+				nz-col
+				nzAccept="image/*"
+				[(nzFileList)]="logoList[0]"
+				[nzFileListRender]="logoTpl"
+				[nzBeforeUpload]="beforeUploadLogo0"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">PC端-中文</span>
+			</nz-upload>
+			<nz-upload
+				nz-col
+				nzAccept="image/*"
+				[(nzFileList)]="logoList[1]"
+				[nzFileListRender]="logoTpl"
+				[nzBeforeUpload]="beforeUploadLogo1"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">PC端-英文</span>
+			</nz-upload>
+			<nz-upload
+				nz-col
+				nzAccept="image/*"
+				[(nzFileList)]="logoList[2]"
+				[nzFileListRender]="logoTpl"
+				[nzBeforeUpload]="beforeUploadLogo2"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">移动端-中文</span>
+			</nz-upload>
+			<nz-upload
+				nz-col
+				nzAccept="image/*"
+				[(nzFileList)]="logoList[3]"
+				[nzFileListRender]="logoTpl"
+				[nzBeforeUpload]="beforeUploadLogo3"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+				<span class="mx-md">移动端-英文</span>
+			</nz-upload>
+		</nz-row>
+	</se>
+	<se label="展馆位置" required>
+		<button nz-button (click)="saveLocation()">搜索定位</button>
+		<abm-map
+			*ngIf="expo.id"
+			#map
+			[options]="options"
+			(ready)="onReady($event)"
+			class="mt-md"
+			style="height: 500px;"
+		></abm-map>
+	</se>
+</se-container>
+
+<ng-template #logoTpl let-list>
+	<div *ngFor="let item of list" class="logo-upload mt-md bg-image">
+		<img
+			[_src]="item.url ? item.url : ''"
+			error="assets/img/empty.png"
+			alt="Avatar"
+		/>
+	</div>
+</ng-template>

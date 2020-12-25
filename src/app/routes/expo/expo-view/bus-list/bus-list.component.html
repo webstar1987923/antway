@@ -1,0 +1,22 @@
+<div
+	nz-row
+	[nzType]="'flex'"
+	[nzJustify]="'space-between'"
+	[nzAlign]="'middle'"
+	class="mb-md"
+>
+	<div></div>
+	<button nz-button (click)="openBusModal()" [nzType]="'primary'">
+		<span>添加班次</span>
+	</button>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[loading]="loading"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+</st>

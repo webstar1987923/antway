@@ -1,0 +1,13 @@
+<div class="modal-header">
+	<div class="modal-title">展管列表</div>
+</div>
+<st
+	#st
+	[columns]="columns"
+	[data]="list"
+	[loading]="loading"
+	[total]="total"
+	[page]="{ front: false, showSize: true, showQuickJumper: true }"
+	(change)="stChange($event)"
+>
+</st>

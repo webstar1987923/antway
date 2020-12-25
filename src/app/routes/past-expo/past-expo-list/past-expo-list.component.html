@@ -1,0 +1,17 @@
+<div class="page-header p-0"></div>
+<nz-card [nzBordered]="false">
+	<st
+		#st
+		[columns]="columns"
+		[data]="expoes"
+		[page]="{ showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.status].color"
+				[nzText]="status[i.status].label"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

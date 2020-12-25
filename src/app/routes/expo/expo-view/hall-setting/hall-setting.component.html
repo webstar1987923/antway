@@ -1,0 +1,112 @@
+<sv-container col="4" labelWidth="150" class="mb-md">
+	<sv label="展会ID">{{ expo.serial }}</sv>
+	<sv label="展馆数量">
+		<a (click)="openBuilding(expo)"> {{ buildings?.length || '0' }}</a>
+	</sv>
+	<sv label="展位数量">
+		<a (click)="openHall(expo)"> {{ expo.halls || '0' }}</a>
+	</sv>
+</sv-container>
+
+<sf #sf [schema]="schema" compact button="none"> </sf>
+<se-container size="compact" labelWidth="150">
+	<se label="导入展馆数据" col="2" required>
+		<nz-row>
+			<nz-upload
+				nz-col
+				nzAccept=".csv, .xls, .xlsx"
+				[(nzFileList)]="fileList"
+				[nzFileListRender]="fileTpl"
+				[nzBeforeUpload]="beforeUploadFile"
+			>
+				<button nz-button>
+					<i nz-icon nzType="upload"></i>
+					<span>上 传</span>
+				</button>
+			</nz-upload>
+		</nz-row>
+	</se>
+	<nz-row>
+		<button nz-button nzType="link" (click)="downloadTemplate()">
+			下载模板
+		</button>
+	</nz-row>
+	<div class="w-100">
+		<button
+			nz-button
+			type="submit"
+			[nzType]="'danger'"
+			(click)="save(sf.value)"
+			[disabled]="!sf.valid"
+			class="mb-md"
+			style="margin-left: 165px"
+		>
+			重置数据
+		</button>
+	</div>
+	<se label="上传地图" col="1" *ngIf="!haveToSaveBuilding && buildings">
+		<nz-row class="mb-md">
+			<button nz-button (click)="uploadMap(-1)">
+				<span>上传全部展馆地图</span>
+			</button>
+			<div
+				*ngIf="expo.apartment?.hall_json"
+				nz-row
+				nzAlign="middle"
+				class="mx-md"
+			>
+				<span
+					><i nz-icon nzType="paper-clip" nzTheme="outline"></i
+				></span>
+				<span>{{ expo.apartment.hall_json.name }}</span>
+			</div>
+			<div
+				*ngIf="expo.apartment?.hall_bg"
+				nz-row
+				nzAlign="middle"
+				class="mx-md"
+			>
+				<span
+					><i nz-icon nzType="paper-clip" nzTheme="outline"></i
+				></span>
+				<span>{{ expo.apartment.hall_bg.name }}</span>
+			</div>
+		</nz-row>
+		<ng-container *ngFor="let building of buildings; let i = index">
+			<nz-row class="mb-md">
+				<button nz-button (click)="uploadMap(i)">
+					<span>上传展馆【{{ building.map_id }}】地图</span>
+				</button>
+				<div
+					*ngIf="building.hall_json"
+					nz-row
+					nzAlign="middle"
+					class="mx-md"
+				>
+					<span
+						><i nz-icon nzType="paper-clip" nzTheme="outline"></i
+					></span>
+					<span>{{ building.hall_json.name }}</span>
+				</div>
+				<div
+					*ngIf="building.hall_bg"
+					nz-row
+					nzAlign="middle"
+					class="mx-md"
+				>
+					<span
+						><i nz-icon nzType="paper-clip" nzTheme="outline"></i
+					></span>
+					<span>{{ building.hall_bg.name }}</span>
+				</div>
+			</nz-row>
+		</ng-container>
+	</se>
+</se-container>
+
+<ng-template #fileTpl let-list>
+	<div nz-row nzAlign="middle" *ngFor="let item of list" class="my-md">
+		<span><i nz-icon nzType="paper-clip" nzTheme="outline"></i></span>
+		<span>{{ item.name }}</span>
+	</div>
+</ng-template>

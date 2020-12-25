@@ -1,0 +1,44 @@
+<nz-card [nzBordered]="false">
+	<se-container labelWidth="120">
+		<se label="背景图片" col="1" required>
+			<p class="text-grey">建议尺寸: 宽度750px</p>
+			<nz-row nzJustify="space-between">
+				<nz-upload
+					nz-col
+					nzAccept="image/*"
+					[(nzFileList)]="imageList[0]"
+					[nzFileListRender]="imageTpl"
+					[nzBeforeUpload]="beforeUploadImage0"
+				>
+					<button nz-button>
+						<i nz-icon nzType="upload"></i>
+						<span>上 传</span>
+					</button>
+				</nz-upload>
+			</nz-row>
+		</se>
+	</se-container>
+	<sf #sf mode="edit" [schema]="schema" button="none"> </sf>
+
+	<div class="text-center">
+		<button
+			nz-button
+			[nzType]="'primary'"
+			(click)="save(sf.value)"
+			[disabled]="!isValidForm()"
+		>
+			<i nz-icon nzType="save"></i>
+			<span>保 存</span>
+		</button>
+	</div>
+
+	<ng-template #imageTpl let-list>
+		<div *ngFor="let item of list" class="image-upload mt-md">
+			<img
+				[_src]="item.url ? item.url : ''"
+				error="assets/img/empty.png"
+				alt="Avatar"
+			/>
+		</div>
+	</ng-template>
+</nz-card>

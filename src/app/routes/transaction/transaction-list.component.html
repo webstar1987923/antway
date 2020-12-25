@@ -1,0 +1,69 @@
+<div class="page-header p-0"></div>
+
+<nz-card [nzBordered]="false">
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="8">
+				<nz-form-item>
+					<nz-form-label nzFor="name">申请人姓名</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.name"
+							name="name"
+							placeholder="请输入搜索申请人姓名"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="8">
+				<nz-form-item>
+					<nz-form-label nzFor="contact">联系方式</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.contact"
+							name="contact"
+							placeholder="请输入联系方式"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="8" class="text-right">
+				<button nz-button type="submit" nzType="primary">查询</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+
+<nz-card [nzBordered]="false">
+	<st
+		#st
+		[columns]="columns"
+		[loading]="loading"
+		[data]="list"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="user-transaction" let-i>
+			<a *ngIf="i.user" (click)="openUserTransaction(i.user)">
+				{{ i.user?.name?.zh || i.user?.name?.en || '-' }}</a
+			>
+		</ng-template>
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.status]?.color"
+				[nzText]="status[i.status]?.label"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

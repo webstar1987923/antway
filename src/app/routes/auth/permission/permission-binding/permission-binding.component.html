@@ -1,0 +1,211 @@
+<div nz-row nzGutter="24">
+	<div nz-col nzMd="24" nzLg="5">
+		<nz-card [nzBordered]="false" [nzTitle]="roleListHeader">
+			<ng-template #roleListHeader>
+				<div class="text-center">
+					<button
+						nz-button
+						(click)="openRoleModal()"
+						[nzType]="'primary'"
+						class="accent"
+					>
+						<i nz-icon nzType="plus"></i>
+						<span>添加角色</span>
+					</button>
+				</div>
+			</ng-template>
+			<div
+				*ngFor="let item of roles"
+				nz-row
+				[nzType]="'flex'"
+				[nzJustify]="'space-between'"
+				[nzAlign]="'middle'"
+				[class.bg-primary-light]="item.isActive"
+				[class.bg-primary]="item.id == selectedRole.id"
+				[class.text-white]="item.isActive || item.id == selectedRole.id"
+				class="p-sm point"
+				(click)="selectRole(item)"
+				(mouseenter)="item.isActive = true"
+				(mouseleave)="item.isActive = false"
+			>
+				<div nz-col>
+					<strong>{{ item.name }}</strong>
+				</div>
+				<div *ngIf="item.isActive" nz-row>
+					<i
+						nz-icon
+						nzType="edit"
+						class="pr-sm"
+						(click)="$event.stopPropagation(); openRoleModal(item)"
+					></i>
+					<i
+						nz-icon
+						nzType="delete"
+						(click)="$event.stopPropagation(); deleteRole(item)"
+					></i>
+				</div>
+			</div>
+		</nz-card>
+	</div>
+
+	<div *ngIf="selectedRole" nz-col nzMd="24" nzLg="19">
+		<nz-card [nzBordered]="false" [nzTitle]="roleHeader">
+			<ng-template #roleHeader>
+				<h3>
+					<strong>{{
+						selectedRole.name ? selectedRole.name : ''
+					}}</strong>
+				</h3>
+				<small class="text-sm text-grey font-weight-normal">
+					{{
+						selectedRole.description ? selectedRole.description : ''
+					}}
+				</small>
+			</ng-template>
+
+			<nz-list [nzLoading]="loading">
+				<ng-container
+					*ngIf="
+						permissionModuleList && permissionModuleList.length;
+						else noPermissionGroups
+					"
+				>
+					<nz-list-item [nzContent]="nzAllContent">
+						<ng-template #nzAllContent>
+							<div>
+								<label
+									nz-checkbox
+									[(ngModel)]="allChecked"
+									(ngModelChange)="updateAllChecked()"
+									[nzIndeterminate]="indeterminate"
+								>
+									<strong>全选</strong>
+								</label>
+								<i
+									nz-icon
+									[nzType]="locked ? 'lock' : 'unlock'"
+									class="pr-lg pointer"
+									[ngClass]="{ 'text-grey': !locked }"
+									(click)="locked = !locked"
+								>
+								</i>
+								<i
+									nz-icon
+									nzType="question-circle"
+									nz-tooltip
+									nzTooltipPlacement="right"
+									nzOverlayClassName="custom-tool-tip"
+									[nzTooltipTitle]="lockToolTip"
+									class="pointer"
+								>
+								</i>
+								<ng-template #lockToolTip>
+									<div>
+										<div>
+											<i
+												nz-icon
+												nzType="lock"
+												class="pr-sm"
+											></i>
+											1.
+											锁定全选：对后续新增的权限组，都有权限访问。默认勾选状态。
+										</div>
+										<div>
+											<i
+												nz-icon
+												nzType="unlock"
+												class="pr-sm"
+											></i>
+											2.
+											解锁状态：对后续新增的权限组，没有权限访问。默认不勾选状态。
+										</div>
+									</div>
+								</ng-template>
+							</div>
+						</ng-template>
+					</nz-list-item>
+					<nz-list-item
+						*ngFor="
+							let item of permissionModuleList;
+							let index = index
+						"
+						[nzContent]="nzContent"
+					>
+						<ng-template #nzContent>
+							<div>
+								<div>
+									<label
+										nz-checkbox
+										[(ngModel)]="item.allChecked"
+										(ngModelChange)="
+											updateAllChecked(index)
+										"
+										[nzIndeterminate]="item.indeterminate"
+									>
+										<strong>{{ item.name }}</strong>
+									</label>
+									<i
+										nz-icon
+										[nzType]="
+											item.locked ? 'lock' : 'unlock'
+										"
+										class="pointer"
+										[ngClass]="{
+											'text-grey': !item.locked
+										}"
+										(click)="item.locked = !item.locked"
+									>
+									</i>
+								</div>
+								<br />
+								<div>
+									<label
+										nz-checkbox
+										*ngFor="
+											let permissionGroup of item.permission_groups
+										"
+										[(ngModel)]="permissionGroup.checked"
+										(ngModelChange)="
+											updateSingleChecked(index)
+										"
+									>
+										{{ permissionGroup.name }}
+									</label>
+								</div>
+							</div>
+						</ng-template>
+					</nz-list-item>
+					<div class="text-center pt-lg">
+						<button
+							nz-button
+							[nzType]="'primary'"
+							(click)="savePermissionGroups()"
+						>
+							<i nz-icon nzType="save"></i>
+							<span>保 存</span>
+						</button>
+					</div>
+				</ng-container>
+				<ng-template #noPermissionGroups>
+					<div class="text-center">
+						<nz-empty
+							nzNotFoundImage="simple"
+							nzNotFoundContent="尚未配置权限组"
+							[nzNotFoundFooter]="footerTpl"
+						>
+							<ng-template #footerTpl>
+								<button
+									nz-button
+									nzType="primary"
+									routerLink="/auth/permission/group"
+								>
+									跳转到权限组管理
+								</button>
+							</ng-template>
+						</nz-empty>
+					</div>
+				</ng-template>
+			</nz-list>
+		</nz-card>
+	</div>
+</div>

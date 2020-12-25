@@ -1,0 +1,18 @@
+<nz-list [nzDataSource]="list" [nzLoading]="loading">
+	<nz-list-header><strong>信息模板</strong></nz-list-header>
+	<nz-list-item *ngFor="let item of list" [nzContent]="nzContent">
+		<ng-template #nzContent>
+			<div>
+				<p>{{ item.name }}</p>
+				<nz-row class="text-grey">
+					<span>{{ item.description }}</span>
+				</nz-row>
+			</div>
+			<ul nz-list-item-actions>
+				<nz-list-item-action>
+					<a (click)="openModal(item)"> 修改 </a>
+				</nz-list-item-action>
+			</ul>
+		</ng-template>
+	</nz-list-item>
+</nz-list>

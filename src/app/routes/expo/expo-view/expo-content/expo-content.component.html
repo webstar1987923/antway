@@ -1,0 +1,58 @@
+<nz-layout class="inner-layout">
+	<nz-sider nzWidth="200px" nzTheme="light">
+		<ul nz-menu nzMode="inline" class="sider-menu">
+			<ng-container
+				*ngFor="let contentType of contentTypes; let i = index"
+			>
+				<li
+					*ngIf="
+						!(contentType.children && contentType.children.length)
+					"
+					nz-menu-item
+					(click)="openHandler(contentType)"
+					[nzSelected]="!i"
+				>
+					{{ contentType.label }}
+				</li>
+				<li
+					*ngIf="contentType.children && contentType.children.length"
+					nz-submenu
+					[(nzOpen)]="contentType.isOpen"
+					(nzOpenChange)="openHandler(contentType)"
+					[nzTitle]="contentType.label"
+				>
+					<ul>
+						<li
+							*ngFor="let sub of contentType.children"
+							nz-menu-item
+							(click)="openHandler(sub)"
+						>
+							{{ sub.label }}
+						</li>
+					</ul>
+				</li>
+			</ng-container>
+		</ul>
+	</nz-sider>
+	<nz-content class="bg-white p-md" style="overflow-x: auto;">
+		<nz-tabset [nzTabBarStyle]="{ 'margin-bottom': '0' }">
+			<nz-tab
+				*ngFor="let tab of descriptionTabs; let i = index"
+				[nzTitle]="tab"
+				[nzForceRender]="true"
+			>
+				<div style="min-height: 334px;">
+					<app-wang-editor
+						*ngIf="showEditor"
+						[(content)]="descriptions[i]"
+					></app-wang-editor>
+				</div>
+			</nz-tab>
+		</nz-tabset>
+	</nz-content>
+</nz-layout>
+<div class="modal-footer mb-0 px-lg">
+	<button nz-button type="submit" [nzType]="'primary'" (click)="save()">
+		保 存
+	</button>
+</div>

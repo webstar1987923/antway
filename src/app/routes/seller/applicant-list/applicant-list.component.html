@@ -1,0 +1,127 @@
+<nz-card [nzBordered]="false">
+	<form
+		nz-form
+		[nzLayout]="'inline'"
+		(ngSubmit)="getData()"
+		class="search__form"
+	>
+		<div nz-row [nzGutter]="16" class="w-100">
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="company_name">企业名称</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.company_name"
+							name="company_name"
+							placeholder="请输入搜索企业名称"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="6">
+				<nz-form-item>
+					<nz-form-label nzFor="manager_name">姓名</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.manager_name"
+							name="manager_name"
+							placeholder="业务员编号"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="4">
+				<nz-form-item>
+					<nz-form-label nzFor="company_phone">手机号</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.company_phone"
+							name="company_phone"
+							placeholder="搜索手机号"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="4">
+				<nz-form-item>
+					<nz-form-label nzFor="admin_name">对应业务员</nz-form-label>
+					<nz-form-control>
+						<input
+							nz-input
+							[(ngModel)]="queryParams.admin_name"
+							name="admin_name"
+							placeholder="业务员编号"
+						/>
+					</nz-form-control>
+				</nz-form-item>
+			</div>
+			<div nz-col nzSpan="4" class="text-right">
+				<button nz-button type="submit" [nzType]="'primary'">
+					查询
+				</button>
+				<button nz-button type="reset" (click)="reset()" class="ml-sm">
+					重置
+				</button>
+			</div>
+		</div>
+	</form>
+</nz-card>
+<nz-card [nzBordered]="false">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div></div>
+		<nz-row>
+			<nz-upload
+				nz-col
+				nzAccept=".csv, .xls, .xlsx"
+				[nzBeforeUpload]="beforeUploadFile"
+				class="mr-sm"
+			>
+				<button nz-button>
+					<span>批量导入</span>
+				</button>
+			</nz-upload>
+			<button nz-button (click)="downloadTemplate()">
+				<span>下载批量导入模板</span>
+			</button>
+			<button nz-button (click)="download()">
+				<span>导出搜索结果</span>
+			</button>
+		</nz-row>
+	</div>
+	<st
+		#st
+		[columns]="columns"
+		[data]="list"
+		[loading]="loading"
+		[total]="total"
+		[page]="{ front: false, showSize: true, showQuickJumper: true }"
+		(change)="stChange($event)"
+	>
+		<ng-template st-row="company_link" let-i>
+			<a
+				*ngIf="i.company"
+				[attr.href]="
+					'http://www.antway.cn/company/home?id=' + i.company.id
+				"
+				target="_blank"
+			>
+				{{ i.company?.name?.zh || i.company?.name?.en || '-' }}</a
+			>
+		</ng-template>
+		<ng-template st-row="status" let-i>
+			<nz-badge
+				[nzColor]="status[i.admin_checked]?.color"
+				[nzText]="status[i.admin_checked]?.label"
+			></nz-badge>
+		</ng-template>
+	</st>
+</nz-card>

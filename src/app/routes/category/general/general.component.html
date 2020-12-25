@@ -1,0 +1,86 @@
+<div class="alain-default__content-title">
+	<h1>
+		{{ tag === 'news' ? '资讯分类' : '' }}
+		{{ tag === 'product_unit' ? '单位设置' : '' }}
+		{{ tag === 'occupation' ? '职业分类' : '' }}
+		{{ tag === 'mgmodel' ? '经营性质' : '' }}
+		{{ tag === 'advertising' ? '广告位分类' : '' }}
+		{{ tag === 'preference' ? '偏好类型' : '' }}
+		{{ tag === 'expo_menu' ? '展会菜单' : '' }}
+		{{ tag === 'expo_content' ? '展会内容' : '' }}
+		{{ tag === 'past_expo_content' ? '历届展会内容' : '' }}
+		{{ tag === 'survey_seller' ? '参展调查问答' : '' }}
+		{{ tag === 'survey_buyer' ? '参观调查问答' : '' }}
+	</h1>
+</div>
+<nz-card [nzBordered]="false" [nzLoading]="loading">
+	<div
+		nz-row
+		[nzType]="'flex'"
+		[nzJustify]="'space-between'"
+		[nzAlign]="'middle'"
+		class="mb-md"
+	>
+		<div>
+			<button
+				nz-button
+				(click)="openCategoryModal()"
+				[nzType]="'primary'"
+			>
+				<span>添加分类</span>
+			</button>
+		</div>
+	</div>
+	<nz-tree
+		#treeNodes
+		nzBlockNode
+		nzDraggable
+		nzShowLine
+		[nzData]="list"
+		[nzTreeTemplate]="nzTreeTemplate"
+		(nzOnDragEnd)="nzOnDragEnd($event)"
+	>
+	</nz-tree>
+	<ng-template #nzTreeTemplate let-node let-origin="origin">
+		<div
+			nz-row
+			[nzType]="'flex'"
+			[nzJustify]="'space-between'"
+			[nzAlign]="'middle'"
+		>
+			<span>
+				<i nz-icon nzType="drag"></i>
+				{{ origin.name ? origin.name.zh : '' }}&nbsp;|&nbsp;{{
+					origin.name ? origin.name.en : ''
+				}}
+			</span>
+			<div>
+				<i
+					*ngIf="level > 1"
+					nz-icon
+					nzType="plus"
+					class="pr-sm"
+					(click)="
+						$event.stopPropagation();
+						openCategoryModal('create', node)
+					"
+				></i>
+				<i
+					nz-icon
+					nzType="edit"
+					class="pr-sm"
+					(click)="
+						$event.stopPropagation();
+						openCategoryModal('edit', node)
+					"
+				></i>
+				<i
+					nz-icon
+					nzType="delete"
+					class="pr-sm"
+					(click)="$event.stopPropagation(); remove(node)"
+				></i>
+			</div>
+		</div>
+	</ng-template>
+</nz-card>

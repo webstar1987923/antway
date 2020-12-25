@@ -1,0 +1,31 @@
+<nz-upload
+	nzAccept="image/*"
+	nzFileType="image/png,image/jpeg,image/gif,image/bmp"
+	[(nzFileList)]="pictureList"
+	[nzFileListRender]="uploadTpl"
+	[nzBeforeUpload]="beforeUploadZh"
+>
+	<div class="text-right">
+		<button nz-button>
+			<i nz-icon nzType="upload"></i>
+			<span>上 传</span>
+		</button>
+	</div>
+</nz-upload>
+
+<ng-template #uploadTpl let-list>
+	<nz-row [nzGutter]="24">
+		<nz-col *ngFor="let item of list">
+			<div class="logo-upload mt-md">
+				<img
+					[_src]="item.url ? item.url : ''"
+					error="assets/img/empty.png"
+					alt="Avatar"
+				/>
+				<div (click)="removeAsset(item)" class="delete">
+					删 除
+				</div>
+			</div>
+		</nz-col>
+	</nz-row>
+</ng-template>

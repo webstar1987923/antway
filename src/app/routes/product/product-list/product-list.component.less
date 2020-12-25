@@ -1,0 +1,24 @@
+@import '~@delon/theme/index';
+:host {
+	::ng-deep {
+		.product {
+			display: flex;
+			flex-flow: row;
+			overflow: hidden;
+			img {
+				width: 66px;
+				height: 66px;
+				margin-right: 1rem;
+			}
+			sv-container {
+				max-width: 240px;
+			}
+		}
+
+		.sv__item {
+			div {
+				padding-bottom: 0px !important;
+			}
+		}
+	}
+}

@@ -1,0 +1,62 @@
+<div class="modal-header">
+	<div class="modal-title">
+		{{ this.data.record.id == null ? '添加' : '修改' }}展会新闻
+	</div>
+</div>
+
+<sf #sf [schema]="schema" compact button="none">
+	<ng-template sf-template="cover" let-me let-ui="ui" let-schema="schema">
+		<nz-upload
+			nz-col
+			nzAccept="image/*"
+			[(nzFileList)]="imageList"
+			[nzFileListRender]="imageTpl"
+			[nzBeforeUpload]="beforeUploadImage"
+		>
+			<button nz-button>
+				<i nz-icon nzType="upload"></i>
+				<span>上 传</span>
+			</button>
+		</nz-upload>
+	</ng-template>
+	<ng-template sf-template="content" let-me let-ui="ui" let-schema="schema">
+		<app-wang-editor [(content)]="data.record.content"></app-wang-editor>
+	</ng-template>
+</sf>
+
+<div class="modal-footer">
+	<button nz-button type="button" (click)="close()">取 消</button>
+	<button
+		nz-button
+		type="submit"
+		[nzType]="'primary'"
+		(click)="save()"
+		[disabled]="!sf.valid"
+	>
+		确 定
+	</button>
+</div>
+
+<ng-template #imageTpl let-list>
+	<nz-row nzGutter="24" class="mt-sm">
+		<nz-col *ngFor="let item of list" nzSpan="4">
+			<div nz-row nzAlign="middle" class="media-wrap">
+				<img
+					[_src]="item.url ? item.url : ''"
+					error="assets/img/empty.png"
+					alt="Avatar"
+				/>
+				<div nz-row class="inline-buttons">
+					<div
+						nz-col
+						nzSpan="24"
+						(click)="removeAsset(item)"
+						style="background-color: rgba(255, 0, 0, 0.43);"
+					>
+						删 除
+					</div>
+				</div>
+			</div>
+		</nz-col>
+	</nz-row>
+</ng-template>
